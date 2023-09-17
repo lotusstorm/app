@@ -1,4 +1,4 @@
-export const getElementFromContext = (name: string) => {
+export const getElementFromContext = (name: string): any => {
   // const vm = getCurrentScope();
   // const nuxtApp = useNuxtApp();
 

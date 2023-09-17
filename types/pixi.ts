@@ -1,1 +1,3 @@
-export type * from 'pixi.js'
+import * as PIXI from 'pixi.js'
+
+export type Pixi = typeof PIXI

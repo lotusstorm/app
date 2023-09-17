@@ -1,10 +1,5 @@
 import * as PIXI from 'pixi.js'
-import type {
-  IApplicationOptions,
-  Application
-} from '~/types/pixi'
-
-export type Pixi = (options?: Partial<IApplicationOptions>) => Application;
+import type { Pixi } from '~/types/pixi'
 
 declare module '#app' {
   interface NuxtApp {
@@ -18,12 +13,6 @@ declare module 'vue' {
   }
 }
 
-export const pixiPluginClient = (app: any) => {
-  const pixiApp = (options?: Partial<IApplicationOptions>): Application => new PIXI.Application(options)
-
-  app.provide('pixi', pixiApp)
-}
-
-export const pixiPluginServer = (app: any) => {
-  app.provide('pixi', (): any => {})
+export const pixiPlugin = (app: any) => {
+  app.provide('pixi', PIXI)
 }

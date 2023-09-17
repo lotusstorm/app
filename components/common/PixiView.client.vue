@@ -21,7 +21,9 @@ defineExpose({
 })
 
 onMounted(() => {
-  pixiApp.value = usePixi(atts)
+  const { Application } = usePixi()
+
+  pixiApp.value = new Application(atts)
 
   __PIXI_ROOT_VIEW__.value.appendChild(pixiApp.value.view)
 })

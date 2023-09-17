@@ -1,9 +1,4 @@
-import type { IApplicationOptions, Application } from 'pixi.js'
 import { getElementFromContext } from './helpers'
-import type { Pixi } from '~/plugins/pixi/pixiPlugin'
+import type { Pixi } from '~/types/pixi'
 
-export const usePixi = (options?: Partial<IApplicationOptions>): Application => {
-  const pixi = (getElementFromContext('$pixi') || (() => {})) as Pixi
-
-  return pixi?.(options)
-}
+export const usePixi = (): Pixi => getElementFromContext('$pixi')
