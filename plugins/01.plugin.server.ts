@@ -1,7 +1,7 @@
-import {pixiPluginServer} from '~/plugins/pixi/pixiPlugin'
+import { pixiPluginServer } from '~/plugins/pixi/pixiPlugin'
 
 export default defineNuxtPlugin((config) => {
-    // console.log(config, 'configconfigconfig');
+  // console.log(config, 'configconfigconfig');
 
-    pixiPluginServer(config);
-});
+  pixiPluginServer(config)
+})

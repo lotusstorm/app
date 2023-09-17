@@ -1,10 +1,10 @@
 export const getElementFromContext = (name: string) => {
-    // const vm = getCurrentScope();
-    // const nuxtApp = useNuxtApp();
+  // const vm = getCurrentScope();
+  // const nuxtApp = useNuxtApp();
 
-    const nuxtApp = getCurrentInstance()?.appContext.app.$nuxt
+  const nuxtApp = getCurrentInstance()?.appContext.app.$nuxt
 
-    console.log(nuxtApp, 'sdfds');
+  console.log(nuxtApp, 'sdfds')
 
-    return nuxtApp?.[name];
+  return nuxtApp?.[name]
 }
