@@ -3,6 +3,10 @@
 </template>
 
 <script lang="ts" setup>
+// import type { Pixi } from '~/types/pixi'
+
+// type IResource= Pixi['Resource']
+// type ITexture= Pixi['Texture']
 
 const {
   Assets,
@@ -18,31 +22,48 @@ const {
 
 const __PIXI_MEM_SLOT_ROOT_VIEW__ = ref()
 
-const app = new Application({ width: 640, height: 700 })
+const app = new Application({ width: 840, height: 900 })
 
-Assets.load([
-  'https://pixijs.com/assets/eggHead.png',
-  'https://pixijs.com/assets/flowerTop.png',
-  'https://pixijs.com/assets/helmlok.png',
-  'https://pixijs.com/assets/skully.png'
-]).then(onAssetsLoaded)
+class A extends Sprite {
+  uuid: string
+
+  constructor (uuid: any, params: any) {
+    super(params)
+
+    this.uuid = uuid
+  }
+}
+
+const running = ref(false)
+
+const dict = {
+  'https://pixijs.com/assets/eggHead.png': 'kek',
+  'https://pixijs.com/assets/flowerTop.png': 'lol',
+  'https://pixijs.com/assets/helmlok.png': 'lul',
+  'https://pixijs.com/assets/skully.png': '???'
+}
+
+Assets.load(Object.keys(dict)).then(onAssetsLoaded)
 
 const REEL_WIDTH = 160
 const SYMBOL_SIZE = 150
 
 // onAssetsLoaded handler builds the example.
-function onAssetsLoaded (data: any) {
+function onAssetsLoaded (data) {
   console.log(data, 'data')
-  
+
   // Create different slot symbols.
-  const slotTextures = Object.values(data)
+  const slotTextures = Object.entries(data)
   console.log(slotTextures, 'slotTextures')
 
   // Build the reels
   const reels = []
   const reelContainer = new Container()
+  // const resalt = new Container()
 
-  for (let i = 0; i < 5; i++) {
+  // debugger
+
+  for (let i = 0; i < 3; i++) {
     const rc = new Container()
 
     rc.x = i * REEL_WIDTH
@@ -61,8 +82,8 @@ function onAssetsLoaded (data: any) {
     rc.filters = [reel.blur]
 
     // Build the symbols
-    for (let j = 0; j < 4; j++) {
-      const symbol = new Sprite(slotTextures[Math.floor(Math.random() * slotTextures.length)])
+    for (let j = 0; j < 3; j++) {
+      const symbol = new A(...slotTextures[Math.floor(Math.random() * slotTextures.length)])
       // Scale the symbol to fit symbol area.
 
       symbol.y = j * SYMBOL_SIZE
@@ -80,10 +101,10 @@ function onAssetsLoaded (data: any) {
 
   reelContainer.y = margin
   reelContainer.x = Math.round(app.screen.width - REEL_WIDTH * 5)
-  const top = new Graphics()
+  // const top = new Graphics()
 
-  top.beginFill(0, 1)
-  top.drawRect(0, 0, app.screen.width, margin)
+  // top.beginFill(0, 1)
+  // top.drawRect(0, 0, app.screen.width, margin)
   const bottom = new Graphics()
 
   bottom.beginFill(0, 1)
@@ -114,13 +135,13 @@ function onAssetsLoaded (data: any) {
   bottom.addChild(playText)
 
   // Add header text
-  const headerText = new Text('PIXI MONSTER SLOTS!', style)
+  // const headerText = new Text('PIXI MONSTER SLOTS!', style)
 
-  headerText.x = Math.round((top.width - headerText.width) / 2)
-  headerText.y = Math.round((margin - headerText.height) / 2)
-  top.addChild(headerText)
+  // headerText.x = Math.round((top.width - headerText.width) / 2)
+  // headerText.y = Math.round((margin - headerText.height) / 2)
+  // top.addChild(headerText)
 
-  app.stage.addChild(top)
+  // app.stage.addChild(top)
   app.stage.addChild(bottom)
 
   // Set the interactivity.
@@ -130,12 +151,16 @@ function onAssetsLoaded (data: any) {
     startPlay()
   })
 
-  let running = false
+  // let running = false
 
   // Function to start playing.
   function startPlay () {
-    if (running) { return }
-    running = true
+    // debugger
+    console.log(reels, 'startPlay');
+    
+
+    if (running.value) { return }
+    running.value = true
 
     for (let i = 0; i < reels.length; i++) {
       const r = reels[i]
@@ -149,7 +174,26 @@ function onAssetsLoaded (data: any) {
 
   // Reels done handler.
   function reelsComplete () {
-    running = false
+    console.log(reels, 'reels');
+    
+    // nextTick(() => {
+
+      for (let i = 0; i < reels.length; i++) {
+        const r = reels[i]
+  
+        for (let j = 0; j < r.symbols.length; j++) {
+          const symbol = r.symbols[j]
+
+          if (Math.floor(symbol.y) === 0) {
+            console.log('reelsComplete', symbol)
+            // resalt.addChild(symbol)
+          }
+        }
+      }
+    running.value = false
+
+    // app.stage.addChild(resalt)
+    // })
   }
 
   // Listen for animate update.
@@ -164,6 +208,7 @@ function onAssetsLoaded (data: any) {
       r.previousPosition = r.position
 
       // Update symbol positions on reel.
+      // debugger
       for (let j = 0; j < r.symbols.length; j++) {
         const s = r.symbols[j]
         const prevy = s.y
@@ -172,7 +217,9 @@ function onAssetsLoaded (data: any) {
         if (s.y < 0 && prevy > SYMBOL_SIZE) {
           // Detect going over and swap a texture.
           // This should in proper product be determined from some logical reel.
-          s.texture = slotTextures[Math.floor(Math.random() * slotTextures.length)]
+          const [uuid, texture] = slotTextures[Math.floor(Math.random() * slotTextures.length)]
+          s.uuid = uuid
+          s.texture = texture
           s.scale.x = s.scale.y = Math.min(SYMBOL_SIZE / s.texture.width, SYMBOL_SIZE / s.texture.height)
           s.x = Math.round((SYMBOL_SIZE - s.width) / 2)
         }
@@ -181,7 +228,6 @@ function onAssetsLoaded (data: any) {
   })
 }
 
-// Very simple tweening utility function. This should be replaced with a proper tweening library in a real product.
 const tweening = []
 
 function tweenTo (object, property, target, time, easing, onchange, oncomplete) {
@@ -214,8 +260,8 @@ app.ticker.add((delta) => {
     if (t.change) { t.change(t) }
     if (phase === 1) {
       t.object[t.property] = t.target
-      if (t.complete) { t.complete(t) }
       remove.push(t)
+      if (t.complete) { t.complete(t) }
     }
   }
   for (let i = 0; i < remove.length; i++) {
@@ -235,8 +281,13 @@ function backout (amount) {
 }
 
 const test = () => {
+  globalThis.__PIXI_APP__ = app
   __PIXI_MEM_SLOT_ROOT_VIEW__.value.appendChild(app.view)
 }
+
+// watch(running, () => {
+//   console.log('');
+// })
 
 onMounted(test)
 </script>
