@@ -1,5 +1,11 @@
 <template>
-  <div ref="__PIXI_MEM_SLOT_ROOT_VIEW__" />
+  <div class="container">
+    <div ref="__PIXI_MEM_SLOT_ROOT_VIEW__" />
+    <div class="container">
+      {{ imgWebp }}
+      <video autoplay playsinline class="video" :src="imgWebp" />
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -22,7 +28,7 @@ const {
 
 const __PIXI_MEM_SLOT_ROOT_VIEW__ = ref()
 
-const app = new Application({ width: 840, height: 900 })
+const app = new Application({ width: 840, height: 800 })
 
 class A extends Sprite {
   uuid: string
@@ -35,15 +41,42 @@ class A extends Sprite {
 }
 
 const running = ref(false)
+const imgWebp = ref('/video/one_pice_netflix_zoro.webm')
 
 const dict = {
-  'https://pixijs.com/assets/eggHead.png': 'kek',
-  'https://pixijs.com/assets/flowerTop.png': 'lol',
-  'https://pixijs.com/assets/helmlok.png': 'lul',
-  'https://pixijs.com/assets/skully.png': '???'
+  '/tyrant.png': '1', // done
+  '/chonguk.jpg': '2', // need
+  '/julia_black.jpg': '3', // need
+  '/leon.png': '4', // done
+  '/naruto.png': '5', // done
+  '/pain.jpg': '6', // done
+  '/seven.jpg': '7', // done
+  '/one_pice_black.png': '8', // need
+  '/one_pice_netflix_zoro.jpg': '9' // done
 }
 
-Assets.load(Object.keys(dict)).then(onAssetsLoaded)
+const video = {
+  344: '/video/ulia_leon_reaction.webm',
+  311: '/video/julia_tyrant_reaction.webm',
+  555: '/video/naruto_blue_bird.webm',
+  777: '/video/papich_eto_mne.webm',
+  111: '/video/papich_ninada_diadia.webm',
+  // 6: '/video/sanboy_tyajalo.webm',
+  999: '/video/one_pice_netflix_zoro.webm',
+  666: '/video/pain_kek.webm'
+}
+
+Assets.load([
+  '/tyrant.png',
+  '/chonguk.jpg',
+  '/julia_black.jpg',
+  '/leon.png',
+  '/seven.jpg',
+  '/pain.jpg',
+  '/naruto.png',
+  '/one_pice_black.png',
+  '/one_pice_netflix_zoro.jpg'
+]).then(onAssetsLoaded)
 
 const REEL_WIDTH = 160
 const SYMBOL_SIZE = 150
@@ -156,8 +189,7 @@ function onAssetsLoaded (data) {
   // Function to start playing.
   function startPlay () {
     // debugger
-    console.log(reels, 'startPlay');
-    
+    console.log(reels, 'startPlay')
 
     if (running.value) { return }
     running.value = true
@@ -174,26 +206,31 @@ function onAssetsLoaded (data) {
 
   // Reels done handler.
   function reelsComplete () {
-    console.log(reels, 'reels');
-    
-    // nextTick(() => {
+    console.log(reels, 'reels')
 
-      for (let i = 0; i < reels.length; i++) {
-        const r = reels[i]
-  
-        for (let j = 0; j < r.symbols.length; j++) {
-          const symbol = r.symbols[j]
+    let res = ''
 
-          if (Math.floor(symbol.y) === 0) {
-            console.log('reelsComplete', symbol)
-            // resalt.addChild(symbol)
-          }
+    for (let i = 0; i < reels.length; i++) {
+      const r = reels[i]
+
+      for (let j = 0; j < r.symbols.length; j++) {
+        const symbol = r.symbols[j]
+
+        if (Math.floor(symbol.y) === 0) {
+          console.log('reelsComplete', symbol)
+          // resalt.addChild(symbol)
+          res += dict[symbol.uuid]
         }
       }
-    running.value = false
+    }
 
-    // app.stage.addChild(resalt)
-    // })
+    // debugger
+
+    console.log(res, 'res')
+
+    // debugger
+    imgWebp.value = video[res] || video[666]
+    running.value = false
   }
 
   // Listen for animate update.
@@ -218,6 +255,7 @@ function onAssetsLoaded (data) {
           // Detect going over and swap a texture.
           // This should in proper product be determined from some logical reel.
           const [uuid, texture] = slotTextures[Math.floor(Math.random() * slotTextures.length)]
+          // const [uuid, texture] = slotTextures[3]
           s.uuid = uuid
           s.texture = texture
           s.scale.x = s.scale.y = Math.min(SYMBOL_SIZE / s.texture.width, SYMBOL_SIZE / s.texture.height)
@@ -291,3 +329,15 @@ const test = () => {
 
 onMounted(test)
 </script>
+
+<style>
+.container {
+  display: flex;
+  flex-direction: row wrap;
+}
+
+.video {
+  width: 500px;
+  height: 500px;
+}
+</style>
