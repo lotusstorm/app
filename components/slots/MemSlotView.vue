@@ -2,7 +2,7 @@
   <div class="container">
     <div ref="__PIXI_MEM_SLOT_ROOT_VIEW__" />
     <div class="container">
-      {{ imgWebp }}
+      {{ imgWebp }}: {{ emptyRole }}
       <video autoplay playsinline class="video" :src="imgWebp" />
     </div>
   </div>
@@ -41,7 +41,19 @@ class A extends Sprite {
 }
 
 const running = ref(false)
-const imgWebp = ref('/video/one_pice_netflix_zoro.webm')
+const imgWebp = ref('')
+
+const emptyRole = ref(0)
+
+const MAX_EMPTY_ROLE = 10
+
+watch(imgWebp, () => {
+  const t = setInterval(() => {
+    imgWebp.value = ''
+
+    clearInterval(t)
+  }, 8000)
+})
 
 const dict = {
   '/tyrant.png': '1', // done
@@ -56,14 +68,39 @@ const dict = {
 }
 
 const video = {
-  344: '/video/ulia_leon_reaction.webm',
-  311: '/video/julia_tyrant_reaction.webm',
-  555: '/video/naruto_blue_bird.webm',
-  777: '/video/papich_eto_mne.webm',
   111: '/video/papich_ninada_diadia.webm',
-  // 6: '/video/sanboy_tyajalo.webm',
+  222: '/video/chonguk_press_2.webm', // chonguk
+  333: '', // juli
+  444: '/video/leon_krinj.webm', // leon
+  555: '/video/naruto_blue_bird.webm',
+  666: '/video/pain_kek.webm',
+  777: '/video/papich_eto_mne.webm',
+  888: '/video/one_pice.webm',
   999: '/video/one_pice_netflix_zoro.webm',
-  666: '/video/pain_kek.webm'
+  1000: '/video/sanboy_tyajalo.webm',
+  // ======================================
+  344: '/video/ulia_leon_reaction.webm',
+  443: '/video/ulia_leon_reaction.webm',
+  433: '/video/ulia_leon_reaction.webm',
+  334: '/video/ulia_leon_reaction.webm',
+  311: '/video/julia_tyrant_reaction.webm',
+  113: '/video/julia_tyrant_reaction.webm',
+  133: '/video/julia_tyrant_reaction.webm',
+  331: '/video/julia_tyrant_reaction.webm',
+  233: '', // chonguk + juli
+  332: '', // chonguk + juli
+  339: '', // zoro + juli
+  993: '', // zoro + juli
+  556: '/video/pain_naruto_2.webm', // naruto + pain
+  665: '/video/pain_naruto_1.webm', // naruto + pain
+  441: '', // leon + tyrant
+  144: '', // leon + tyrant
+  998: '/video/one_pice_zoro.webm', // zoro + one_pice
+  889: '/video/one_pice_zoro.webm', // zoro + one_pice
+  229: '', // zoro + chonguk
+  992: '', // zoro + chonguk
+  833: '', // juli + one_pice => ban
+  338: '', // juli + one_pice => ban
 }
 
 Assets.load([
@@ -194,11 +231,17 @@ function onAssetsLoaded (data) {
     if (running.value) { return }
     running.value = true
 
+    const extra = Math.floor(Math.random() * 3)
+
     for (let i = 0; i < reels.length; i++) {
       const r = reels[i]
-      const extra = Math.floor(Math.random() * 3)
       const target = r.position + 10 + i * 5 + extra
       const time = 2500 + i * 600 + extra * 600
+
+      console.log(i, 'reels[i]')
+      console.log(extra, 'extra')
+      console.log(target, 'target')
+      console.log(time, 'time')
 
       tweenTo(r, 'position', target, time, backout(0.5), null, i === reels.length - 1 ? reelsComplete : null)
     }
@@ -229,7 +272,17 @@ function onAssetsLoaded (data) {
     console.log(res, 'res')
 
     // debugger
-    imgWebp.value = video[res] || video[666]
+
+    if (res in video) {
+      imgWebp.value = video[res]
+      emptyRole.value = 0
+    } else if (emptyRole.value === MAX_EMPTY_ROLE) {
+      imgWebp.value = video[1000]
+      emptyRole.value = 0
+    }
+
+    emptyRole.value += 1
+
     running.value = false
   }
 
