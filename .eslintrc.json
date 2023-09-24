@@ -20,6 +20,10 @@
         "sourceType": "module"
     },
     "rules": {
-        "no-console": "off"
+        "no-console": "off",
+        "comma-dangle": "off",
+        "no-use-before-define": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "space-before-function-paren": "off"
     }
 }

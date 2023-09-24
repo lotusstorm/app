@@ -1,14 +1,46 @@
 <template>
-  <div class="container">
-    <div ref="__PIXI_MEM_SLOT_ROOT_VIEW__" />
-    <div class="container">
-      {{ imgWebp }}: {{ emptyRole }}
-      <video autoplay playsinline class="video" :src="imgWebp" />
+  <div class="root-container">
+    <img class="img img-left" src="/swap_face_no_background_julia_3.png">
+    <div class="view-container">
+      <div ref="__PIXI_MEM_SLOT_ROOT_VIEW__" />
+      <div class="controle-panel">
+        <UiButton
+          class="play-btn"
+          is-round
+          @click="handleStart"
+        >
+          <UiIcon icon="play" />
+        </UiButton>
+        <UiButton
+          class="play-btn"
+          is-round
+          @click="handleRefresh"
+        >
+          <UiIcon icon="repeat" />
+        </UiButton>
+      </div>
     </div>
+    <img class="img img-right" src="/leon_background_2.png">
+
+    <!-- <div v-show="!!imgWebm" class="container">
+      src: {{ imgWebm }}
+      <br>
+      duration: {{ duration }}
+      <br>
+      emptyRole: {{ emptyRole }}
+      <video autoplay playsinline loop class="video" :src="imgWebm" />
+    </div> -->
+    <!-- <UiIcon icon="play" /> -->
+
+    <!-- <UiButton>
+      <UiIcon icon="repeat" />
+    </UiButton> -->
   </div>
 </template>
 
 <script lang="ts" setup>
+import UiIcon from '~/components/ui/icons/UiIcon.vue'
+
 // import type { Pixi } from '~/types/pixi'
 
 // type IResource= Pixi['Resource']
@@ -28,7 +60,25 @@ const {
 
 const __PIXI_MEM_SLOT_ROOT_VIEW__ = ref()
 
-const app = new Application({ width: 840, height: 800 })
+const width = computed(() => window.innerWidth / 2)
+const height = computed(() => window.innerHeight / 2)
+
+const reels = ref([])
+const reelContainer = new Container()
+
+const a = 900
+const b = 300
+
+const app = new Application({
+  width: a,
+  height: b,
+  // resizeTo: window,
+})
+
+// console.log(app.screen);
+
+const REEL_WIDTH = Math.floor(app.screen.width / 3)
+const SYMBOL_SIZE = b
 
 class A extends Sprite {
   uuid: string
@@ -41,18 +91,20 @@ class A extends Sprite {
 }
 
 const running = ref(false)
-const imgWebp = ref('')
+const imgWebm = ref('')
+const duration = ref(0)
 
 const emptyRole = ref(0)
 
 const MAX_EMPTY_ROLE = 10
 
-watch(imgWebp, () => {
-  const t = setInterval(() => {
-    imgWebp.value = ''
+watch(imgWebm, () => {
+  const t = setTimeout(() => {
+    imgWebm.value = ''
+    duration.value = 0
 
-    clearInterval(t)
-  }, 8000)
+    clearTimeout(t)
+  }, unref(duration))
 })
 
 const dict = {
@@ -64,43 +116,274 @@ const dict = {
   '/pain.jpg': '6', // done
   '/seven.jpg': '7', // done
   '/one_pice_black.png': '8', // need
-  '/one_pice_netflix_zoro.jpg': '9' // done
+  '/one_pice_netflix_zoro.jpg': '9', // done
+  '/B.jpg': 'b', // done
+  '/T.jpg': 't', // done
+  '/S.png': 's' // done
 }
 
 const video = {
-  111: '/video/papich_ninada_diadia.webm',
-  222: '/video/chonguk_press_2.webm', // chonguk
-  333: '', // juli
-  444: '/video/leon_krinj.webm', // leon
-  555: '/video/naruto_blue_bird.webm',
-  666: '/video/pain_kek.webm',
-  777: '/video/papich_eto_mne.webm',
-  888: '/video/one_pice.webm',
-  999: '/video/one_pice_netflix_zoro.webm',
-  1000: '/video/sanboy_tyajalo.webm',
+  111: {
+    video: '/video/papich_ninada_diadia.webm',
+    duration: 8000,
+  }, // papich
+  222: {
+    video: '/video/chonguk_press_2.webm',
+    duration: 5000,
+  }, // chonguk
+  333: {
+    video: '',
+    duration: 8000,
+  }, // juli
+  444: {
+    video: '/video/leon_krinj.webm',
+    duration: 8000,
+  }, // leon
+  555: {
+    video: '/video/naruto_blue_bird.webm',
+    duration: 8000,
+  }, // naruto
+  666: {
+    video: '/video/pain_kek.webm',
+    duration: 8000,
+  }, // pain
+  777: {
+    video: '/video/papich_eto_mne.webm',
+    duration: 8000,
+  }, // papich
+  888: {
+    video: '/video/one_pice.webm',
+    duration: 8000,
+  }, // one
+  999: {
+    video: '/video/one_pice_netflix_zoro.webm',
+    duration: 8000,
+  }, // zoro
+  1000: {
+    video: '/video/sanboy_tyajalo.webm',
+    duration: 8000,
+  }, // sanboy
+  bts: {
+    video: '/video/bts.webm',
+    duration: 5000,
+  },
   // ======================================
-  344: '/video/ulia_leon_reaction.webm',
-  443: '/video/ulia_leon_reaction.webm',
-  433: '/video/ulia_leon_reaction.webm',
-  334: '/video/ulia_leon_reaction.webm',
-  311: '/video/julia_tyrant_reaction.webm',
-  113: '/video/julia_tyrant_reaction.webm',
-  133: '/video/julia_tyrant_reaction.webm',
-  331: '/video/julia_tyrant_reaction.webm',
-  233: '', // chonguk + juli
-  332: '', // chonguk + juli
-  339: '', // zoro + juli
-  993: '', // zoro + juli
-  556: '/video/pain_naruto_2.webm', // naruto + pain
-  665: '/video/pain_naruto_1.webm', // naruto + pain
-  441: '', // leon + tyrant
-  144: '', // leon + tyrant
-  998: '/video/one_pice_zoro.webm', // zoro + one_pice
-  889: '/video/one_pice_zoro.webm', // zoro + one_pice
-  229: '', // zoro + chonguk
-  992: '', // zoro + chonguk
-  833: '', // juli + one_pice => ban
-  338: '', // juli + one_pice => ban
+  344: {
+    video: '/video/julia_leon_reaction.webm',
+    duration: 8000,
+  }, // juli + leon
+  443: {
+    video: '/video/julia_leon_reaction.webm',
+    duration: 8000,
+  }, // juli + leon
+  433: {
+    video: '/video/julia_leon_reaction.webm',
+    duration: 8000,
+  }, // juli + leon
+  334: {
+    video: '/video/julia_leon_reaction.webm',
+    duration: 8000,
+  }, // juli + leon
+  343: {
+    video: '/video/julia_leon_reaction.webm',
+    duration: 8000,
+  }, // juli + leon
+  434: {
+    video: '/video/julia_leon_reaction.webm',
+    duration: 8000,
+  }, // juli + leon
+  311: {
+    video: '/video/julia_tyrant_reaction.webm',
+    duration: 8000,
+  }, // juli + tyrant
+  113: {
+    video: '/video/julia_tyrant_reaction.webm',
+    duration: 8000,
+  }, // juli + tyrant
+  133: {
+    video: '/video/julia_tyrant_reaction.webm',
+    duration: 8000,
+  }, // juli + tyrant
+  331: {
+    video: '/video/julia_tyrant_reaction.webm',
+    duration: 8000,
+  }, // juli + tyrant
+  313: {
+    video: '/video/julia_tyrant_reaction.webm',
+    duration: 8000,
+  }, // juli + tyrant
+  131: {
+    video: '/video/julia_tyrant_reaction.webm',
+    duration: 8000,
+  }, // juli + tyrant
+  233: {
+    video: '/video/chonguk_press_1.webm',
+    duration: 4000,
+  }, // chonguk + juli ??
+  332: {
+    video: '/video/chonguk_press_1.webm',
+    duration: 4000,
+  }, // chonguk + juli ??
+  223: {
+    video: '/video/chonguk_press_1.webm',
+    duration: 4000,
+  }, // chonguk + juli ??
+  322: {
+    video: '/video/chonguk_press_1.webm',
+    duration: 4000,
+  }, // chonguk + juli ??
+  323: {
+    video: '/video/chonguk_press_1.webm',
+    duration: 4000,
+  }, // chonguk + juli ??
+  232: {
+    video: '/video/chonguk_press_1.webm',
+    duration: 8000,
+  }, // chonguk + juli ??
+  339: {
+    video: '',
+    duration: 8000,
+  }, // zoro + juli
+  993: {
+    video: '',
+    duration: 8000,
+  }, // zoro + juli
+  399: {
+    video: '',
+    duration: 8000,
+  }, // zoro + juli
+  933: {
+    video: '',
+    duration: 8000,
+  }, // zoro + juli
+  393: {
+    video: '',
+    duration: 8000,
+  }, // zoro + juli
+  939: {
+    video: '',
+    duration: 8000,
+  }, // zoro + juli
+  556: {
+    video: '/video/pain_naruto_2.webm',
+    duration: 8000,
+  }, // naruto + pain
+  665: {
+    video: '/video/pain_naruto_1.webm',
+    duration: 8000,
+  }, // naruto + pain
+  566: {
+    video: '/video/pain_naruto_2.webm',
+    duration: 8000,
+  }, // naruto + pain
+  655: {
+    video: '/video/pain_naruto_1.webm',
+    duration: 8000,
+  }, // naruto + pain
+  565: {
+    video: '/video/pain_naruto_1.webm',
+    duration: 8000,
+  }, // naruto + pain
+  656: {
+    video: '/video/pain_naruto_1.webm',
+    duration: 8000,
+  }, // naruto + pain
+  441: {
+    video: '/video/leon_vs_tyrant.webm',
+    duration: 8000,
+  }, // leon + tyrant
+  144: {
+    video: '/video/leon_vs_tyrant_3.webm',
+    duration: 8000,
+  }, // leon + tyrant
+  411: {
+    video: '/video/leon_vs_tyrant.webm',
+    duration: 8000,
+  }, // leon + tyrant
+  114: {
+    video: '/video/leon_vs_tyrant_3.webm',
+    duration: 8000,
+  }, // leon + tyrant
+  141: {
+    video: '/video/leon_vs_tyrant_3.webm',
+    duration: 8000,
+  }, // leon + tyrant
+  414: {
+    video: '/video/leon_vs_tyrant_3.webm',
+    duration: 8000,
+  }, // leon + tyrant
+  998: {
+    video: '/video/one_pice_zoro.webm',
+    duration: 8000,
+  }, // zoro + one_pice
+  889: {
+    video: '/video/one_pice_zoro.webm',
+    duration: 8000,
+  }, // zoro + one_pice
+  988: {
+    video: '/video/one_pice_zoro.webm',
+    duration: 8000,
+  }, // zoro + one_pice
+  899: {
+    video: '/video/one_pice_zoro.webm',
+    duration: 8000,
+  }, // zoro + one_pice
+  898: {
+    video: '/video/one_pice_zoro.webm',
+    duration: 8000,
+  }, // zoro + one_pice
+  989: {
+    video: '/video/one_pice_zoro.webm',
+    duration: 8000,
+  }, // zoro + one_pice
+  229: {
+    video: '/video/gachi_gym_boss.webm',
+    duration: 5000,
+  }, // zoro + chonguk
+  992: {
+    video: '/video/gachi_gym_boss.webm',
+    duration: 5000,
+  }, // zoro + chonguk
+  299: {
+    video: '/video/gachi_gym_boss.webm',
+    duration: 5000,
+  }, // zoro + chonguk
+  922: {
+    video: '/video/gachi_gym_boss.webm',
+    duration: 5000,
+  }, // zoro + chonguk
+  292: {
+    video: '/video/gachi_gym_boss.webm',
+    duration: 5000,
+  }, // zoro + chonguk
+  929: {
+    video: '/video/gachi_gym_boss.webm',
+    duration: 5000,
+  }, // zoro + chonguk
+  833: {
+    video: '/video/twitch_ban.webm',
+    duration: 8000,
+  }, // juli + one_pice => ban
+  338: {
+    video: '/video/twitch_ban.webm',
+    duration: 8000,
+  }, // juli + one_pice => ban
+  883: {
+    video: '/video/twitch_ban.webm',
+    duration: 8000,
+  }, // juli + one_pice => ban
+  388: {
+    video: '/video/twitch_ban.webm',
+    duration: 8000,
+  }, // juli + one_pice => ban
+  383: {
+    video: '/video/twitch_ban.webm',
+    duration: 8000,
+  }, // juli + one_pice => ban
+  838: {
+    video: '/video/twitch_ban.webm',
+    duration: 8000,
+  }, // juli + one_pice => ban
 }
 
 Assets.load([
@@ -112,14 +395,89 @@ Assets.load([
   '/pain.jpg',
   '/naruto.png',
   '/one_pice_black.png',
-  '/one_pice_netflix_zoro.jpg'
+  '/one_pice_netflix_zoro.jpg',
 ]).then(onAssetsLoaded)
 
-const REEL_WIDTH = 160
-const SYMBOL_SIZE = 150
+const handleStart = () => {
+  startPlay()
+}
 
+const handleRefresh = () => {
+  console.log('handleRefresh')
+}
+// let running = false
+
+// Function to start playing.
+function startPlay() {
+  // debugger
+  console.log(reels.value, 'startPlay')
+
+  if (running.value) { return }
+  running.value = true
+
+  const extra = Math.floor(Math.random() * 3)
+
+  for (let i = 0; i < reels.value.length; i++) {
+    const r = reels.value[i]
+    const target = r.position + 10 + i * 5 + extra
+    const time = 2500 + i * 600 + extra * 600
+
+    console.log(i, 'reels.value[i]')
+    console.log(extra, 'extra')
+    console.log(target, 'target')
+    console.log(time, 'time')
+
+    tweenTo(r, 'position', target, time, backout(0.5), null, i === reels.value.length - 1 ? reelsComplete : null)
+  }
+}
+
+// Reels done handler.
+function reelsComplete() {
+  console.log(reels.value, 'reels.value')
+
+  let res = ''
+
+  for (let i = 0; i < reels.value.length; i++) {
+    const r = reels.value[i]
+
+    for (let j = 0; j < r.symbols.length; j++) {
+      const symbol = r.symbols[j]
+
+      if (Math.floor(symbol.y) === 0) {
+        console.log('reelsComplete', symbol)
+        // resalt.addChild(symbol)
+        res += dict[symbol.uuid]
+      }
+    }
+  }
+
+  // debugger
+
+  console.log(res, 'res')
+
+  // debugger
+
+  let webm = ''
+  let dur = 0
+
+  if (res in video) {
+    webm = video[res].video
+    dur = video[res].duration
+    emptyRole.value = 0
+  } else if (emptyRole.value === MAX_EMPTY_ROLE) {
+    webm = video[1000].video
+    dur = video[1000].duration
+    emptyRole.value = 0
+  }
+
+  imgWebm.value = webm
+  duration.value = dur
+  emptyRole.value += 1
+
+  running.value = false
+}
 // onAssetsLoaded handler builds the example.
-function onAssetsLoaded (data) {
+function onAssetsLoaded(data) {
   console.log(data, 'data')
 
   // Create different slot symbols.
@@ -127,8 +485,6 @@ function onAssetsLoaded (data) {
   console.log(slotTextures, 'slotTextures')
 
   // Build the reels
-  const reels = []
-  const reelContainer = new Container()
   // const resalt = new Container()
 
   // debugger
@@ -162,135 +518,27 @@ function onAssetsLoaded (data) {
       reel.symbols.push(symbol)
       rc.addChild(symbol)
     }
-    reels.push(reel)
+    reels.value.push(reel)
   }
+
   app.stage.addChild(reelContainer)
 
   // Build top & bottom covers and position reelContainer
-  const margin = (app.screen.height - SYMBOL_SIZE * 3) / 2
+  // const margin = (app.screen.height - SYMBOL_SIZE * 3) / 2
 
-  reelContainer.y = margin
-  reelContainer.x = Math.round(app.screen.width - REEL_WIDTH * 5)
+  // reelContainer.y = 155
+  // reelContainer.x = 5
+  // reelContainer.
   // const top = new Graphics()
 
   // top.beginFill(0, 1)
   // top.drawRect(0, 0, app.screen.width, margin)
-  const bottom = new Graphics()
-
-  bottom.beginFill(0, 1)
-  bottom.drawRect(0, SYMBOL_SIZE * 3 + margin, app.screen.width, margin)
-
-  // Add play text
-  const style = new TextStyle({
-    fontFamily: 'Arial',
-    fontSize: 36,
-    fontStyle: 'italic',
-    fontWeight: 'bold',
-    fill: ['#ffffff', '#00ff99'], // gradient
-    stroke: '#4a1850',
-    strokeThickness: 5,
-    dropShadow: true,
-    dropShadowColor: '#000000',
-    dropShadowBlur: 4,
-    dropShadowAngle: Math.PI / 6,
-    dropShadowDistance: 6,
-    wordWrap: true,
-    wordWrapWidth: 440
-  })
-
-  const playText = new Text('Spin the wheels!', style)
-
-  playText.x = Math.round((bottom.width - playText.width) / 2)
-  playText.y = app.screen.height - margin + Math.round((margin - playText.height) / 2)
-  bottom.addChild(playText)
-
-  // Add header text
-  // const headerText = new Text('PIXI MONSTER SLOTS!', style)
-
-  // headerText.x = Math.round((top.width - headerText.width) / 2)
-  // headerText.y = Math.round((margin - headerText.height) / 2)
-  // top.addChild(headerText)
-
-  // app.stage.addChild(top)
-  app.stage.addChild(bottom)
-
-  // Set the interactivity.
-  bottom.eventMode = 'static'
-  bottom.cursor = 'pointer'
-  bottom.addListener('pointerdown', () => {
-    startPlay()
-  })
-
-  // let running = false
-
-  // Function to start playing.
-  function startPlay () {
-    // debugger
-    console.log(reels, 'startPlay')
-
-    if (running.value) { return }
-    running.value = true
-
-    const extra = Math.floor(Math.random() * 3)
-
-    for (let i = 0; i < reels.length; i++) {
-      const r = reels[i]
-      const target = r.position + 10 + i * 5 + extra
-      const time = 2500 + i * 600 + extra * 600
-
-      console.log(i, 'reels[i]')
-      console.log(extra, 'extra')
-      console.log(target, 'target')
-      console.log(time, 'time')
-
-      tweenTo(r, 'position', target, time, backout(0.5), null, i === reels.length - 1 ? reelsComplete : null)
-    }
-  }
-
-  // Reels done handler.
-  function reelsComplete () {
-    console.log(reels, 'reels')
-
-    let res = ''
-
-    for (let i = 0; i < reels.length; i++) {
-      const r = reels[i]
-
-      for (let j = 0; j < r.symbols.length; j++) {
-        const symbol = r.symbols[j]
-
-        if (Math.floor(symbol.y) === 0) {
-          console.log('reelsComplete', symbol)
-          // resalt.addChild(symbol)
-          res += dict[symbol.uuid]
-        }
-      }
-    }
-
-    // debugger
-
-    console.log(res, 'res')
-
-    // debugger
-
-    if (res in video) {
-      imgWebp.value = video[res]
-      emptyRole.value = 0
-    } else if (emptyRole.value === MAX_EMPTY_ROLE) {
-      imgWebp.value = video[1000]
-      emptyRole.value = 0
-    }
-
-    emptyRole.value += 1
-
-    running.value = false
-  }
 
   // Listen for animate update.
   app.ticker.add((delta) => {
     // Update the slots.
-    for (let i = 0; i < reels.length; i++) {
-      const r = reels[i]
+    for (let i = 0; i < reels.value.length; i++) {
+      const r = reels.value[i]
       // Update blur filter y amount based on speed.
       // This would be better if calculated with time in mind also. Now blur depends on frame rate.
 
@@ -361,13 +609,13 @@ app.ticker.add((delta) => {
 })
 
 // Basic lerp funtion.
-function lerp (a1, a2, t) {
+function lerp(a1, a2, t) {
   return a1 * (1 - t) + a2 * t
 }
 
 // Backout function from tweenjs.
 // https://github.com/CreateJS/TweenJS/blob/master/src/tweenjs/Ease.js
-function backout (amount) {
+function backout(amount) {
   return t => (--t * t * ((amount + 1) * t + amount) + 1)
 }
 
@@ -376,21 +624,48 @@ const test = () => {
   __PIXI_MEM_SLOT_ROOT_VIEW__.value.appendChild(app.view)
 }
 
-// watch(running, () => {
-//   console.log('');
-// })
-
 onMounted(test)
 </script>
 
 <style>
-.container {
+body {
+  margin: 0px;
+  /* background-image: url("/main_background_4.jpg"); */
+  background-image: url("/main_background_4.png");
+}
+
+.root-container {
   display: flex;
-  flex-direction: row wrap;
+  flex-direction: row;
+  width: 100vw;
+  height: 100vh;
+  /* position: relative; */
+}
+
+.view-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.controle-panel {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
 }
 
 .video {
   width: 500px;
   height: 500px;
+}
+
+.root-container .play-btn {
+  /* position: absolute;
+  bottom: 15px;
+  left: 10px; */
+}
+
+.img {
+  height: 100%;
 }
 </style>
