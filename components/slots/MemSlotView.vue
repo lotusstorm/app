@@ -87,7 +87,7 @@ class A extends Sprite {
 }
 
 const running = ref(false)
-const imgWebm = ref('/video/papich_ninada_diadia.webm')
+const imgWebm = ref('')
 const duration = ref(0)
 
 const emptyRole = ref(0)
