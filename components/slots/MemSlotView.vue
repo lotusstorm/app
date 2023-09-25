@@ -2,7 +2,7 @@
   <div class="root-container">
     <img class="img img-left" src="/swap_face_no_background_julia_3.png">
     <div class="view-container">
-      <div ref="__PIXI_MEM_SLOT_ROOT_VIEW__" />
+      <div ref="__PIXI_MEM_SLOT_ROOT_VIEW__" class="view" />
       <div class="controle-panel">
         <UiButton
           class="play-btn"
@@ -22,29 +22,25 @@
     </div>
     <img class="img img-right" src="/leon_background_2.png">
 
-    <!-- <div v-show="!!imgWebm" class="container">
+    <div v-show="!!imgWebm" class="modal-container">
+      <video autoplay playsinline loop class="video" :src="imgWebm" />
+      <div class="modal-description">
+        <span>Аноним</span>
+        <span>+100</span>
+      </div>
+    </div>
+    <span class="inspect">
       src: {{ imgWebm }}
       <br>
       duration: {{ duration }}
       <br>
       emptyRole: {{ emptyRole }}
-      <video autoplay playsinline loop class="video" :src="imgWebm" />
-    </div> -->
-    <!-- <UiIcon icon="play" /> -->
-
-    <!-- <UiButton>
-      <UiIcon icon="repeat" />
-    </UiButton> -->
+    </span>
   </div>
 </template>
 
 <script lang="ts" setup>
 import UiIcon from '~/components/ui/icons/UiIcon.vue'
-
-// import type { Pixi } from '~/types/pixi'
-
-// type IResource= Pixi['Resource']
-// type ITexture= Pixi['Texture']
 
 const {
   Assets,
@@ -66,8 +62,8 @@ const height = computed(() => window.innerHeight / 2)
 const reels = ref([])
 const reelContainer = new Container()
 
-const a = 900
-const b = 300
+const a = 665
+const b = 220
 
 const app = new Application({
   width: a,
@@ -91,7 +87,7 @@ class A extends Sprite {
 }
 
 const running = ref(false)
-const imgWebm = ref('')
+const imgWebm = ref('/video/papich_ninada_diadia.webm')
 const duration = ref(0)
 
 const emptyRole = ref(0)
@@ -114,12 +110,12 @@ const dict = {
   '/leon.png': '4', // done
   '/naruto.png': '5', // done
   '/pain.jpg': '6', // done
-  '/seven.jpg': '7', // done
+  '/seven.png': '7', // done
   '/one_pice_black.png': '8', // need
   '/one_pice_netflix_zoro.jpg': '9', // done
   '/B.jpg': 'b', // done
-  '/T.jpg': 't', // done
-  '/S.png': 's' // done
+  '/T.png': 't', // done
+  '/S.jpg': 's' // done
 }
 
 const video = {
@@ -391,11 +387,14 @@ Assets.load([
   '/chonguk.jpg',
   '/julia_black.jpg',
   '/leon.png',
-  '/seven.jpg',
+  '/seven.png',
   '/pain.jpg',
   '/naruto.png',
   '/one_pice_black.png',
   '/one_pice_netflix_zoro.jpg',
+  // '/B.jpg',
+  // '/T.png',
+  // '/S.jpg',
 ]).then(onAssetsLoaded)
 
 const handleStart = () => {
@@ -632,6 +631,47 @@ body {
   margin: 0px;
   /* background-image: url("/main_background_4.jpg"); */
   background-image: url("/main_background_4.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.inspect {
+  position: absolute;
+  right: 0;
+  top: 0;
+  /* width: 100px;
+  height: 70px; */
+  padding: 5px;
+  background-color: rgba(255, 255, 255, 0.6);
+  font-size: 32px;
+  z-index: 100;
+}
+
+.modal-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  /* justify-content: center; */
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  z-index: 999;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.video {
+  display: flex;
+  /* position: relative; */
+  /* top: 50px; */
+  margin-top: 3%;
+  width: 500px;
+  background-color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
 }
 
 .root-container {
@@ -639,24 +679,67 @@ body {
   flex-direction: row;
   width: 100vw;
   height: 100vh;
-  /* position: relative; */
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
 }
 
 .view-container {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
+  border-radius: 15px;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 15px;
+  margin-top: 180px;
+  margin-bottom: auto;
+  z-index: 99;
+}
+
+.view-container::before {
+  content: "";
+  width: 344px;
+  height: 344px;
+  border-radius: 50% 50% 0 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  position: absolute;
+  top: -165px;
+}
+
+.view-container::after {
+  content: "";
+  width: 344px;
+  height: 344px;
+  position: absolute;
+  top: -250px;
+  background-image: url('/logo_pj.png');
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.view {
+  z-index: 100;
+}
+
+.view::before {
+  content: "";
+  position: absolute;
+  border: 5px solid rgb(237, 1, 171);
+  width: 665px;
+  height: 220px;
+  top: 10px;
+  left: 10px;
+  bottom: 0;
+  right: 0;
+  border-radius: 5px;
+  box-shadow: 0px 0px 15px 5px rgba(237, 1, 171, 0.7);
 }
 
 .controle-panel {
   display: flex;
   flex-flow: row;
   align-items: center;
-}
-
-.video {
-  width: 500px;
-  height: 500px;
 }
 
 .root-container .play-btn {
@@ -668,4 +751,15 @@ body {
 .img {
   height: 100%;
 }
+
+.img.img-left {
+  position: relative;
+  left: 135px;
+}
+
+.img.img-right {
+  position: relative;
+  right: 135px;
+}
+
 </style>
