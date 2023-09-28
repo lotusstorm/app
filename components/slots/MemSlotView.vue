@@ -54,9 +54,13 @@
       <video autoplay playsinline loop class="video" :src="imgWebm" />
       <div class="modal-description">
         <!-- <span class="main">Аноним</span> -->
-        <span class="description">{{ winBid }}</span>
+        <div v-if="isShowModalDescription" class="description">
+          <span class="text">+{{ winBid }}</span>
+          <UiIcon icon="pj-icon" height="22px" width="22px" />
+        </div>
       </div>
     </div>
+
     <span class="inspect">
       src: {{ imgWebm }}
       <br>
@@ -114,7 +118,8 @@ const {
 
 Assets.load(assets).then(onAssetsLoaded)
 
-const formatedBalance = computed(() => balance.value >= 1000000 ? `${Math.floor(balance.value / 100000)} kkk` : balance.value)
+const formatedBalance = computed(() => balance.value >= 1000000 ? `${Math.floor(balance.value / 1000000)} kk` : balance.value)
+const isShowModalDescription = computed(() => winBid.value > 0)
 
 const handleStart = () => {
   startPlay()
@@ -181,16 +186,39 @@ onMounted(test)
 
   .video {
     display: flex;
-    margin-top: 3%;
-    width: 500px;
+    margin-top: 5%;
+    /* width: 500px; */
     background-color: white;
     padding: 5px 10px;
     border-radius: 5px;
+    max-height: 80vh;
+    min-height: 400px;
   }
 
   .modal-description {
+    margin-top: 20px;
+
     .main {}
-    .description {}
+    .description {
+      font-weight: bold;
+      font-size: 48px;
+      display: flex;
+      align-items: center;
+      padding-right: 10px;
+
+      .text {
+        color: #FFA12B;
+        text-shadow: 0 -1px rgba(0, 0, 0, 0.1);
+        animation: pulsate 1.2s linear infinite;
+      }
+    }
+  }
+}
+
+@keyframes pulsate {
+  50% {
+    color: #fff;
+    text-shadow: 0 -1px rgba(0, 0, 0, .3), 0 0 5px #ffd, 0 0 8px #fff;
   }
 }
 
