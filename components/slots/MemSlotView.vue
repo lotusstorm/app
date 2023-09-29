@@ -3,10 +3,25 @@
     <img class="img img-left" src="/swap_face_no_background_julia_3.png">
     <div class="view-container">
       <div class="indicator left">
-        <UiIcon icon="dice" fill="#FFA12B" height="22px" width="22px" />
-        <span class="delimeter">x</span>
-        <UiSwitch v-model="isLucky" />
+        <template v-if="!isLuckyCooldown">
+          <UiIcon icon="dice" fill="#FFA12B" height="22px" width="22px" />
+          <span class="delimeter">x</span>
+          <UiSwitch v-model="isLucky" />
+        </template>
+        <span v-else class="timer">
+          {{ luckySpinsCooldown }}
+        </span>
       </div>
+      <Transition name="slide-fade">
+        <div v-if="isLucky" class="indicator center">
+          <div class="lucky-spins">
+            {{ luckySpins }}
+          </div>
+          <div class="lucky-spins-text">
+            LUCKY x SPINS
+          </div>
+        </div>
+      </Transition>
       <div class="indicator right">
         <span>{{ formatedBalance }}</span>
         <UiIcon icon="pj-icon" height="18px" width="22px" />
@@ -54,7 +69,8 @@
       <video autoplay playsinline loop class="video" :src="imgWebm" />
       <div class="modal-description">
         <!-- <span class="main">Аноним</span> -->
-        <div v-if="isShowModalDescription" class="description">
+        <!-- v-if="isShowModalDescription" -->
+        <div class="description">
           <span class="text">+{{ winBid }}</span>
           <UiIcon icon="pj-icon" height="22px" width="22px" />
         </div>
@@ -75,6 +91,8 @@
       winBid: {{ winBid }}
       <br>
       multiplayer: {{ multiplayer }}
+      <br>
+      luckySpinsCooldown: {{ luckySpinsCooldown }}
     </span>
   </div>
 </template>
@@ -90,16 +108,15 @@ const {
   Application,
 } = usePixi()
 
-const isLucky = ref(false)
-
 const __PIXI_MEM_SLOT_ROOT_VIEW__ = ref()
 
-const height = 220
-const width = 665
+const HEIGHT = 220
+const WIDTH = 665
 
 const app = new Application({
-  height,
-  width,
+  height: HEIGHT,
+  width: WIDTH,
+  background: '#000000',
 })
 
 const {
@@ -114,12 +131,16 @@ const {
   imgWebm,
   duration,
   emptyRole,
+  isLucky,
+  luckySpins,
+  luckySpinsCooldown,
 } = useHelpers(app)
 
 Assets.load(assets).then(onAssetsLoaded)
 
 const formatedBalance = computed(() => balance.value >= 1000000 ? `${Math.floor(balance.value / 1000000)} kk` : balance.value)
 const isShowModalDescription = computed(() => winBid.value > 0)
+const isLuckyCooldown = computed(() => luckySpinsCooldown.value > 0)
 
 const handleStart = () => {
   startPlay()
@@ -161,6 +182,20 @@ onMounted(test)
 </script>
 
 <style scoped lsng="scss">
+.slide-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateY(20px);
+  opacity: 0;
+}
+
 .inspect {
   position: absolute;
   right: 0;
@@ -209,16 +244,31 @@ onMounted(test)
       .text {
         color: #FFA12B;
         text-shadow: 0 -1px rgba(0, 0, 0, 0.1);
-        animation: pulsate 1.2s linear infinite;
+        animation: pulsate-text 1.2s linear infinite;
       }
     }
   }
 }
 
-@keyframes pulsate {
+@keyframes pulsate-text {
   50% {
     color: #fff;
     text-shadow: 0 -1px rgba(0, 0, 0, .3), 0 0 5px #ffd, 0 0 8px #fff;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulsate-bg {
+  0% {
+    box-shadow: 0px 0px 5px 5px rgba(237, 1, 171, 0.7);
+  }
+  100% {
+    box-shadow: 0px 0px 15px 5px rgba(237, 1, 171, 0.7);
   }
 }
 
@@ -240,7 +290,6 @@ onMounted(test)
     display: flex;
     flex-direction: column;
     align-items: center;
-    border-radius: 15px;
     background-color: rgba(0, 0, 0, 0.7);
     padding: 15px;
     margin-top: 180px;
@@ -249,25 +298,76 @@ onMounted(test)
 
     .indicator {
       display: flex;
-      align-items: center;
       content: "";
-      width: 164px;
       position: absolute;
-      color: #FFA12B;
-      padding: 15px;
       background-color: rgba(0, 0, 0);
-      top: -62px;
       display: flex;
-      align-items: center;
 
       .delimeter {
         padding: 0 5px;
+      }
+
+      &.center {
+        top: -145px;
+        background-color: black;
+        /* border-radius: 50%; */
+        color: #FFA12B;
+
+        /* border: 5px solid #FFA12B; */
+        z-index: 150;
+        /* padding: 35px; */
+        /* width: 145px;
+        height: 145px; */
+        align-items: center;
+        /* justify-content: center; */
+        flex-direction: column;
+
+        .lucky-spins {
+          font-size: 60px;
+          font-weight: bold;
+          width: 105px;
+          height: 105px;
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          &::before {
+            content: "";
+            box-shadow: 0px -3px 15px 5px rgba(255, 161, 43, 0.7);
+            border-radius: 50%;
+            animation: spin 1.2s linear infinite;
+            position: absolute;
+            width: 105px;
+            height: 105px;
+            border: 5px solid #FFA12B;
+          }
+        }
+
+        .lucky-spins-text {
+          margin-top: 20px;
+        }
+      }
+
+      &.left, &.right {
+        color: #FFA12B;
+        width: 164px;
+        height: 64px;
+        top: -62px;
+        border-radius: 15px;
+        padding: 15px;
+        align-items: center;
+
       }
 
       &.left {
         left: 4%;
         border-radius: 5px 0 0 0;
         justify-content: flex-start;
+
+        .timer {
+          font-size: 30px;
+        }
       }
 
       &.right {
@@ -287,7 +387,8 @@ onMounted(test)
       position: absolute;
       top: -165px;
       border: 5px solid rgb(237, 1, 171);
-      box-shadow: 0px 0px 15px 5px rgba(237, 1, 171, 0.7);
+      /* box-shadow: 0px 0px 15px 5px rgba(237, 1, 171, 0.7); */
+      animation: pulsate-bg 1.2s linear infinite alternate;
       z-index: 100;
     }
 
@@ -304,7 +405,7 @@ onMounted(test)
     }
 
     .view {
-      z-index: 100;
+      z-index: 250;
       margin-bottom: 10px;
 
       &::before {
@@ -318,7 +419,8 @@ onMounted(test)
         bottom: 0;
         right: 0;
         border-radius: 5px;
-        box-shadow: 0px 0px 15px 5px rgba(237, 1, 171, 0.7);
+        /* box-shadow: 0px 0px 15px 5px rgba(237, 1, 171, 0.7); */
+        animation: pulsate-bg 1.2s linear infinite alternate;
       }
     }
 

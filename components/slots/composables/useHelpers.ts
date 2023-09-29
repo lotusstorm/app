@@ -1,5 +1,5 @@
 import { dict, video } from '~/components/slots/helpers/constants'
-import { lerp, backout } from '~/components/slots/helpers/utils'
+import { lerp, backout, RequestAnimFrameTimer, Flag } from '~/components/slots/helpers/utils'
 
 export const useHelpers = (app: any) => {
   const {
@@ -20,6 +20,9 @@ export const useHelpers = (app: any) => {
 
   const REEL_WIDTH = Math.floor(app.screen.width / 3)
   const SYMBOL_SIZE = app.screen.height
+  const MAX_EMPTY_ROLE = 10
+
+  const reelContainer = new Container()
 
   const balance = ref(999999)
   const bid = ref(10)
@@ -55,7 +58,6 @@ export const useHelpers = (app: any) => {
   ])
 
   const reels = ref([])
-  const reelContainer = new Container()
 
   const running = ref(false)
   const imgWebm = ref('')
@@ -63,13 +65,34 @@ export const useHelpers = (app: any) => {
 
   const emptyRole = ref(0)
 
-  const MAX_EMPTY_ROLE = 10
+  const isLucky = ref(false)
+  const luckySpins = ref(6)
+  const luckySpinsCooldown = ref(0)
+
+  const timer = new RequestAnimFrameTimer(luckySpinsCooldown)
+
+  const tweening = ref([])
 
   function startPlay() {
     if (running.value) { return }
 
     running.value = true
     balance.value -= bid.value
+
+    if (isLucky.value) {
+      if (luckySpins.value > 0) {
+        luckySpins.value -= 1
+      }
+
+      nextTick(() => {
+        if (luckySpins.value === 0) {
+          isLucky.value = false
+          luckySpins.value = 6
+
+          timer.start(60, Flag.dec).stop(0)
+        }
+      })
+    }
 
     const extra = Math.floor(Math.random() * 3)
 
@@ -201,8 +224,6 @@ export const useHelpers = (app: any) => {
     })
   }
 
-  const tweening = ref([])
-
   function tweenTo (object, property, target, time, easing, onchange, oncomplete) {
     const tween = {
       object,
@@ -255,5 +276,8 @@ export const useHelpers = (app: any) => {
     imgWebm,
     duration,
     emptyRole,
+    isLucky,
+    luckySpins,
+    luckySpinsCooldown,
   }
 }
