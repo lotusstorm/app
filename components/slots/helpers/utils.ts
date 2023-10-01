@@ -55,12 +55,8 @@ export class RequestAnimFrameTimer {
     const currentTime = (new Date()).getTime()
 
     this._ID = globalThis.requestAnimationFrame(() => this.timer(step))
-    console.log(this._ID, 'this._ID')
 
     if (currentTime - this.lastTime >= 1000) {
-      console.log('Last Time: ' + this.lastTime)
-      console.log('Current Time: ' + currentTime)
-
       this.lastTime = currentTime
       this.numSeconds += step
       this.currentTarget.value = this.numSeconds
@@ -140,6 +136,7 @@ export class LuckySpins {
 
   step() {
     this.target = Math.floor(Math.random() * this.variants.length)
+    // this.target += 1
 
     if (this.target > this.variants.length - 1) {
       this.target = 0

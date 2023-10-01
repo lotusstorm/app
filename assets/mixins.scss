@@ -1,0 +1,21 @@
+@mixin square($w, $h, $border: 5px, $shadow-size: 5px, $color: #FFA12B) {
+  font-size: 60px;
+  font-weight: bold;
+  width: $w;
+  height: $h;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &::before {
+    content: "";
+    box-shadow: 0px -3px 15px $shadow-size rgba($color, 0.7);
+    border-radius: 50%;
+    animation: spin 1.2s linear infinite;
+    position: absolute;
+    width: $w;
+    height: $h;
+    border: $border solid $color;
+  }
+}

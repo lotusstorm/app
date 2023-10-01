@@ -1,4 +1,4 @@
-import { dict, video, assets } from '~/components/slots/helpers/constants'
+import { dict, video, assets, luckySpinVariants } from '~/components/slots/helpers/constants'
 import { lerp, backout, RequestAnimFrameTimer, Flag, LuckySpins, converter } from '~/components/slots/helpers/utils'
 
 export const useHelpers = (app: any) => {
@@ -72,9 +72,11 @@ export const useHelpers = (app: any) => {
   const tweening = ref([])
 
   const timer = new RequestAnimFrameTimer(luckySpinsCooldown)
-  const spin = new LuckySpins(Object.keys(video))
+  const spin = new LuckySpins(luckySpinVariants)
 
   const ids = converter(dict)
+
+  const EXTRA = 2
 
   function startPlay() {
     if (running.value) { return }
@@ -88,26 +90,15 @@ export const useHelpers = (app: any) => {
       if (luckySpins.value > 0) {
         luckySpins.value -= 1
       }
-
-      nextTick(() => {
-        if (luckySpins.value === 0) {
-          isLucky.value = false
-          luckySpins.value = 6
-
-          timer.start(60, Flag.dec).stop(0)
-        }
-      })
     }
-
-    const extra = Math.floor(Math.random() * 3)
 
     for (let i = 0; i < reels.value.length; i++) {
       const r = reels.value[i]
-      const target = r.position + 10 + i * 5 + extra
-      const time = 2500 + i * 600 + extra * 600
+      const target = r.position + 10 + i * 5 + EXTRA
+      const time = 2500 + i * 600 + EXTRA * 600
 
       console.log(i, 'reels.value[i]')
-      console.log(extra, 'extra')
+      console.log(EXTRA, 'EXTRA')
       console.log(target, 'target')
       console.log(time, 'time')
 
@@ -139,13 +130,24 @@ export const useHelpers = (app: any) => {
     if (res in video) {
       webm = video[res].video
       dur = video[res].duration
-      winBid.value = video[res].winBid * multiplayer.value + bid.value
+      winBid.value = video[res].winBid + bid.value * multiplayer.value
       emptyRole.value = 0
     } else if (emptyRole.value === MAX_EMPTY_ROLE) {
-      webm = video[1000].video
-      dur = video[1000].duration
+      webm = video['000'].video
+      dur = video['000'].duration
       winBid.value = 0
       emptyRole.value = 0
+    }
+
+    if (isLucky.value) {
+      nextTick(() => {
+        if (luckySpins.value === 0) {
+          isLucky.value = false
+          luckySpins.value = 6
+
+          timer.start(60, Flag.dec).stop(0)
+        }
+      })
     }
 
     imgWebm.value = webm
@@ -221,14 +223,15 @@ export const useHelpers = (app: any) => {
           if (s.y < 0 && prevy > SYMBOL_SIZE) {
             // Detect going over and swap a texture.
             // This should in proper product be determined from some logical reel.
-            let [uuid, texture] = slotTextures[Math.floor(Math.random() * slotTextures.length)]
+
+            let uuid, texture
 
             if (isLucky.value) {
-              // debugger
               const ind = spin.next()
-              console.log(ind, 'ind');
               uuid = ids[ind]
               texture = data[uuid]
+            } else {
+              [uuid, texture] = slotTextures[Math.floor(Math.random() * slotTextures.length)]
             }
 
             s.uuid = uuid

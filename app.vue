@@ -12,8 +12,11 @@
 
 body {
   margin: 0px;
-  /* background-image: url("/main_background_4.jpg"); */
   width: 100vw;
   height: 100vh;
+  background-image: url("/main_background_4.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 </style>
