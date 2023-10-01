@@ -1,0 +1,1 @@
+import{_ as o}from"./nuxt-link.9f4839d9.js";import{_ as n,c,d as t,b as s,w as _,o as a}from"./entry.475a93fa.js";const r={};function l(d,f){const e=o;return a(),c("div",null,[t(" hollo!!! "),s(e,{to:"slots"},{default:_(()=>[t(" slots ")]),_:1})])}const x=n(r,[["render",l]]);export{x as default};
