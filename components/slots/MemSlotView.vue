@@ -3,11 +3,9 @@
     <img class="img img-left" src="/swap_face_no_background_julia_3.png">
     <div class="view-container">
       <div class="indicator left">
-        <template v-if="!isLuckyCooldown">
-          <UiIcon icon="dice" fill="#FFA12B" height="22px" width="22px" />
-          <span class="delimeter">x</span>
-          <UiSwitch v-model="isLucky" />
-        </template>
+        <UiIcon icon="dice" fill="#FFA12B" height="22px" width="22px" />
+        <span class="delimeter">x</span>
+        <UiSwitch v-if="!isLuckyCooldown" v-model="isLucky" />
         <span v-else class="timer">
           {{ luckySpinsCooldown }}
         </span>
@@ -139,7 +137,7 @@ const {
 Assets.load(assets).then(onAssetsLoaded)
 
 const formatedBalance = computed(() => balance.value >= 1000000 ? `${Math.floor(balance.value / 1000000)} kk` : balance.value)
-const isShowModalDescription = computed(() => winBid.value > 0)
+// const isShowModalDescription = computed(() => winBid.value > 0)
 const isLuckyCooldown = computed(() => luckySpinsCooldown.value > 0)
 
 const handleStart = () => {

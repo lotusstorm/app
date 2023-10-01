@@ -101,6 +101,63 @@ export class RequestAnimFrameTimer {
   }
 }
 
+export class LuckySpins {
+  private variants: any[] = []
+  private variant: any = null
+  private target = 0
+
+  constructor(variants: any[]) {
+    this.variants = variants
+
+    this.variant = this.gen(this.target)
+  }
+
+  private *gen(start: any) {
+    if (this.variants.length === 0) {
+      return 0
+    }
+
+    const variant = this.variants[start]
+
+    if (variant !== undefined) {
+      for (const item of variant.split('')) {
+        yield item
+      }
+    }
+  }
+
+  next(): any {
+    const item = this.variant?.next()
+
+    if (item?.done) {
+      this.variant = this.gen(this.target)
+
+      return this.next()
+    }
+
+    return item?.value
+  }
+
+  step() {
+    this.target = Math.floor(Math.random() * this.variants.length)
+
+    if (this.target > this.variants.length - 1) {
+      this.target = 0
+    }
+
+    this.variant = this.gen(this.target)
+    console.log(this.target, 'step -> this.target')
+  }
+}
+
+export const converter = (dict: any) => {
+  return Object.assign(Object.entries(dict).reduce((acc, [key, val]: [string, any]) => {
+    acc[val] = key
+
+    return acc
+  }, {} as any), dict)
+}
+
 // Basic lerp funtion.
 export const lerp = (a1: any, a2: any, t: any) => {
   return a1 * (1 - t) + a2 * t

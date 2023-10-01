@@ -1,5 +1,5 @@
-import { dict, video } from '~/components/slots/helpers/constants'
-import { lerp, backout, RequestAnimFrameTimer, Flag } from '~/components/slots/helpers/utils'
+import { dict, video, assets } from '~/components/slots/helpers/constants'
+import { lerp, backout, RequestAnimFrameTimer, Flag, LuckySpins, converter } from '~/components/slots/helpers/utils'
 
 export const useHelpers = (app: any) => {
   const {
@@ -69,9 +69,12 @@ export const useHelpers = (app: any) => {
   const luckySpins = ref(6)
   const luckySpinsCooldown = ref(0)
 
-  const timer = new RequestAnimFrameTimer(luckySpinsCooldown)
-
   const tweening = ref([])
+
+  const timer = new RequestAnimFrameTimer(luckySpinsCooldown)
+  const spin = new LuckySpins(Object.keys(video))
+
+  const ids = converter(dict)
 
   function startPlay() {
     if (running.value) { return }
@@ -80,6 +83,8 @@ export const useHelpers = (app: any) => {
     balance.value -= bid.value
 
     if (isLucky.value) {
+      spin.step()
+
       if (luckySpins.value > 0) {
         luckySpins.value -= 1
       }
@@ -122,8 +127,7 @@ export const useHelpers = (app: any) => {
 
         if (Math.floor(symbol.y) === 0) {
           console.log('reelsComplete', symbol)
-          // resalt.addChild(symbol)
-          res += dict[symbol.uuid]
+          res += ids[symbol.uuid]
         }
       }
     }
@@ -151,8 +155,9 @@ export const useHelpers = (app: any) => {
     running.value = false
   }
   // onAssetsLoaded handler builds the example.
-  function onAssetsLoaded(data) {
+  function onAssetsLoaded(data: { [s: string]: unknown } | ArrayLike<unknown>) {
     console.log(data, 'data')
+    console.log(assets, 'assets')
 
     // Create different slot symbols.
     const slotTextures = Object.entries(data)
@@ -192,13 +197,17 @@ export const useHelpers = (app: any) => {
     app.stage.addChild(reelContainer)
 
     // Listen for animate update.
-    app.ticker.add((delta) => {
+    app.ticker.add((delta: any) => {
+      if (!running.value) {
+        return
+      }
+
       // Update the slots.
       for (let i = 0; i < reels.value.length; i++) {
         const r = reels.value[i]
+
         // Update blur filter y amount based on speed.
         // This would be better if calculated with time in mind also. Now blur depends on frame rate.
-
         r.blur.blurY = (r.position - r.previousPosition) * 8
         r.previousPosition = r.position
 
@@ -212,7 +221,15 @@ export const useHelpers = (app: any) => {
           if (s.y < 0 && prevy > SYMBOL_SIZE) {
             // Detect going over and swap a texture.
             // This should in proper product be determined from some logical reel.
-            const [uuid, texture] = slotTextures[Math.floor(Math.random() * slotTextures.length)]
+            let [uuid, texture] = slotTextures[Math.floor(Math.random() * slotTextures.length)]
+
+            if (isLucky.value) {
+              // debugger
+              const ind = spin.next()
+              console.log(ind, 'ind');
+              uuid = ids[ind]
+              texture = data[uuid]
+            }
 
             s.uuid = uuid
             s.texture = texture
@@ -224,7 +241,7 @@ export const useHelpers = (app: any) => {
     })
   }
 
-  function tweenTo (object, property, target, time, easing, onchange, oncomplete) {
+  function tweenTo (object: never, property: string, target: any, time: number, easing: (t: any) => number, onchange: null, oncomplete: (() => void) | null) {
     const tween = {
       object,
       property,
@@ -241,10 +258,15 @@ export const useHelpers = (app: any) => {
 
     return tween
   }
+
   // Listen for animate update.
   app.ticker.add(() => {
+    if (!running.value) {
+      return
+    }
+
     const now = Date.now()
-    const remove = []
+    const remove: any[] = []
 
     for (let i = 0; i < tweening.value.length; i++) {
       const t = tweening.value[i]
