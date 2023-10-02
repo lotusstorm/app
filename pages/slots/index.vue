@@ -1,22 +1,30 @@
 <template>
   <div class="slots-root-container">
-    <img class="img img-left" src="/swap_face_no_background_julia_3.png">
+    <img class="img img-left" src="/julia_bg.webp" loading="lazy">
     <div class="content-container">
       <div class="content-container-bg" />
+      <div class="author">
+        <img src="/avatar.webp" alt="avatar" class="avatar">
+        <a href="https://www.twitch.tv/pinkjuli" class="text" target="_blank">
+          pinkjuli
+        </a>
+      </div>
       <ClientOnly>
         <MemSlotView />
       </ClientOnly>
     </div>
-    <img class="img img-right" src="/leon_background_2.png">
+    <img class="img img-right" src="/leon_bg.webp" loading="lazy">
 
-    <Loader v-show="isShow" :is-ready="isDataReady">
-      <UiButton
-        class="play-btn"
-        @click="handleStart"
-      >
-        <UiIcon icon="play" />
-      </UiButton>
-    </Loader>
+    <Transition name="slide-fade">
+      <Loader v-show="isShow" :is-ready="isDataReady">
+        <UiButton
+          class="play-btn"
+          @click="handleStart"
+        >
+          <UiIcon icon="play" />
+        </UiButton>
+      </Loader>
+    </Transition>
   </div>
 </template>
 
@@ -40,7 +48,19 @@ useNuxtApp().hook('page:finish', () => {
 </script>
 
 <style scoped lang="scss">
-// font-family: 'Black Ops One', cursive;
+.slide-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateY(-100%);
+}
+
 .slots-root-container {
   display: flex;
   flex-direction: row;
@@ -61,7 +81,33 @@ useNuxtApp().hook('page:finish', () => {
     margin-top: 180px;
     margin-bottom: auto;
     z-index: 99;
-    border-radius: 10px;
+    border-radius: 0 0 10px 10px;
+
+    .author {
+      position: absolute;
+      content: "";
+      top: -130px;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .avatar {
+        border-radius: 50%;
+        overflow: hidden;
+        animation: pulsate-bg 1.2s linear infinite alternate;
+        border: 3px solid rgb(237, 1, 171);
+        width: 80px;
+        height: 80px;
+        margin-bottom: 10px;
+      }
+
+      .text {
+        color: #FFA12B;
+        font-size: 30px;
+        font-family: 'Black Ops One', cursive;
+      }
+    }
 
     &-bg {
       width: 100%;
@@ -81,7 +127,7 @@ useNuxtApp().hook('page:finish', () => {
       position: absolute;
       top: -165px;
       border: 5px solid rgb(237, 1, 171);
-      animation: pulsate-bg 1.2s linear infinite alternate;
+      // animation: pulsate-bg 1.2s linear infinite alternate;
       z-index: 10;
     }
 
@@ -94,7 +140,7 @@ useNuxtApp().hook('page:finish', () => {
         top: 10px;
         z-index: 250;
         border-radius: 5px;
-        animation: pulsate-bg 1.2s linear infinite alternate;
+        // animation: pulsate-bg 1.2s linear infinite alternate;
       }
 
     // &::after {

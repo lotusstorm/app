@@ -147,6 +147,69 @@ export class LuckySpins {
   }
 }
 
+export class VideoPreloader {
+  private videoPlayer: any = null
+
+  load(videoFileUrls: any[]) {
+    // debugger
+    console.log(videoFileUrls, 'videoFileUrls')
+
+    // Создадим предварительный кэш видео и сохраним в нем все первые сегменты видеофайлов.
+    globalThis.caches.open('video-pre-cache')
+      .then(cache => Promise.all(videoFileUrls.map((videoFileUrl: any) => this.fetchAndCache(videoFileUrl, cache))))
+
+    return this
+  }
+
+  private fetchAndCache(videoFileUrl: RequestInfo | URL, cache: { match: (arg0: any) => Promise<any>; put: (arg0: any, arg1: Response) => void }) {
+    // Сначала проверяем, есть ли видео в кэше.
+    return cache.match(videoFileUrl)
+      .then((cacheResponse: any) => {
+      // Вернем кэшированный ответ, если видео в кэше.
+        if (cacheResponse) {
+          return cacheResponse
+        }
+        // В противном случае получаем видео из сети.
+        return fetch(videoFileUrl)
+          .then((networkResponse) => {
+            // Добавляем ответ в кэш и параллельно возвращаем ответ сети.
+            cache.put(videoFileUrl, networkResponse.clone())
+            return networkResponse
+          })
+      })
+  }
+
+  init(videoPlayer: any) {
+    this.videoPlayer = videoPlayer
+
+    return this
+  }
+
+  private sourceOpen(data: any, mediaSource: MediaSource) {
+    URL.revokeObjectURL(this.videoPlayer.src)
+
+    const sourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs="vp09.00.10.08"')
+    sourceBuffer.appendBuffer(data)
+
+    this.videoPlayer.play().then(() => {
+    // Сделать: Получить остальную часть видео при начале воспроизведения.
+    })
+  }
+
+  play(videoFileUrl: RequestInfo | URL) {
+    this.videoPlayer.load() // Дает возможность проиграть видео позже.
+
+    globalThis.caches.open('video-pre-cache')
+      .then(cache => this.fetchAndCache(videoFileUrl, cache)) // Определено выше.
+      .then(response => response.arrayBuffer())
+      .then((data) => {
+        const mediaSource = new MediaSource()
+        this.videoPlayer.src = URL.createObjectURL(mediaSource)
+        mediaSource.addEventListener('sourceopen', this.sourceOpen.bind(this, data, mediaSource), { once: true })
+      })
+  }
+}
+
 export const converter = (dict: any) => {
   return Object.assign(Object.entries(dict).reduce((acc, [key, val]: [string, any]) => {
     acc[val] = key

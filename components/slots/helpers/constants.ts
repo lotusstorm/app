@@ -386,32 +386,32 @@ export const luckySpinVariants = [
 ]
 
 export const dict = {
-  '/app/tyrant.png': '1', // done
-  '/app/chonguk.jpg': '2', // need
-  '/app/julia_black.jpg': '3', // need
-  '/app/leon.png': '4', // done
-  '/app/naruto.png': '5', // done
-  '/app/pain.jpg': '6', // done
-  '/app/seven.png': '7', // done
-  '/app/one_pice_black.png': '8', // need
-  '/app/one_pice_netflix_zoro.jpg': '9', // done
-  '/app/B.jpg': 'b', // done
-  '/app/T.png': 't', // done
-  '/app/S.jpg': 's', // done
-  '/app/genshin.png': 'g', // done
+  '/app/tyrant.webp': '1', // done
+  '/app/chonguk.webp': '2', // need
+  '/app/juli.webp': '3', // need
+  '/app/leon.webp': '4', // done
+  '/app/naruto.webp': '5', // done
+  '/app/pain.webp': '6', // done
+  '/app/seven.webp': '7', // done
+  '/app/one_piece.webp': '8', // need
+  '/app/one_piece_netflix_zoro.webp': '9', // done
+  '/app/B.webp': 'b', // done
+  '/app/T.webp': 't', // done
+  '/app/S.webp': 's', // done
+  '/app/genshin.webp': 'g', // done
 }
 
 export const assets = [
-  '/app/tyrant.png',
-  '/app/chonguk.jpg',
-  '/app/julia_black.jpg',
-  '/app/leon.png',
-  '/app/seven.png',
-  '/app/pain.jpg',
-  '/app/naruto.png',
-  '/app/one_pice_black.png',
-  '/app/one_pice_netflix_zoro.jpg',
-  '/app/genshin.png',
+  '/app/tyrant.webp',
+  '/app/chonguk.webp',
+  '/app/juli.webp',
+  '/app/leon.webp',
+  '/app/seven.webp',
+  '/app/pain.webp',
+  '/app/naruto.webp',
+  '/app/one_piece.webp',
+  '/app/one_piece_netflix_zoro.webp',
+  '/app/genshin.webp',
   // '/B.jpg',
   // '/T.png',
   // '/S.jpg',

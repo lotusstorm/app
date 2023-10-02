@@ -14,9 +14,9 @@
           <div class="lucky-spins">
             {{ luckySpins }}
           </div>
-          <div class="lucky-spins-text">
+          <span class="lucky-spins-text">
             LUCKY x SPINS
-          </div>
+          </span>
         </div>
       </Transition>
       <div class="indicator right">
@@ -28,6 +28,7 @@
         <div class="left">
           <UiButton
             class="play-btn"
+            :size="size.l"
             is-round
             @click="handleStart"
           >
@@ -35,6 +36,7 @@
           </UiButton>
           <UiButton
             class="repeat-btn"
+            :size="size.l"
             is-round
             @click="handleRefresh"
           >
@@ -63,41 +65,51 @@
 
     <Teleport to="body">
       <div v-show="!!imgWebm" class="modal-container">
-        <video autoplay playsinline loop class="video" :src="imgWebm" />
+        <video
+          ref="__VIDEO_ROOT_VIEW__"
+          autoplay
+          playsinline
+          loop
+          class="video"
+        />
+        <!-- :src="imgWebm" -->
         <div class="modal-description">
           <div class="description">
             <span class="text">+{{ winBid }}</span>
-            <UiIcon icon="pj-icon" height="22px" width="22px" />
+            <UiIcon icon="pj-icon" height="32px" width="32px" />
           </div>
         </div>
       </div>
     </Teleport>
 
-    <span class="inspect">
-      src: {{ imgWebm }}
-      <br>
-      duration: {{ duration }}
-      <br>
-      emptyRole: {{ emptyRole }}
-      <br>
-      balance: {{ balance }}
-      <br>
-      bid: {{ bid }}
-      <br>
-      winBid: {{ winBid }}
-      <br>
-      multiplayer: {{ multiplayer }}
-      <br>
-      luckySpinsCooldown: {{ luckySpinsCooldown }}
-    </span>
+    <Teleport to="body">
+      <span class="inspect">
+        src: {{ imgWebm }}
+        <br>
+        duration: {{ duration }}
+        <br>
+        emptyRole: {{ emptyRole }}
+        <br>
+        balance: {{ balance }}
+        <br>
+        bid: {{ bid }}
+        <br>
+        winBid: {{ winBid }}
+        <br>
+        multiplayer: {{ multiplayer }}
+        <br>
+        luckySpinsCooldown: {{ luckySpinsCooldown }}
+      </span>
+    </Teleport>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { useHelpers } from '~/components/slots/composables/useHelpers'
-import { assets } from '~/components/slots/helpers/constants'
+import { assets, video } from '~/components/slots/helpers/constants'
 import UiIcon from '~/components/ui/icons/UiIcon.vue'
 import { size } from '~/components/ui/constants/size'
+import { VideoPreloader } from '~/components/slots/helpers/utils'
 
 const {
   Assets,
@@ -105,6 +117,7 @@ const {
 } = usePixi()
 
 const __PIXI_MEM_SLOT_ROOT_VIEW__ = ref()
+const __VIDEO_ROOT_VIEW__ = ref()
 
 const HEIGHT = 220
 const WIDTH = 665
@@ -114,6 +127,8 @@ const app = new Application({
   width: WIDTH,
   background: '#000000',
 })
+
+const videos = new VideoPreloader().load(Object.values(video).map(({ video }) => video))
 
 const {
   balance,
@@ -134,8 +149,7 @@ const {
 
 Assets.load(assets).then(onAssetsLoaded)
 
-const formatedBalance = computed(() => balance.value >= 1000000 ? `${Math.floor(balance.value / 1000000)} kk` : balance.value)
-// const isShowModalDescription = computed(() => winBid.value > 0)
+const formatedBalance = computed(() => balance.value >= 1000000 ? `${(balance.value / 1000000).toFixed(1)} kk` : balance.value)
 const isLuckyCooldown = computed(() => luckySpinsCooldown.value > 0)
 
 const handleStart = () => {
@@ -158,10 +172,13 @@ const handleBid = (newBid: any) => {
 const test = () => {
   globalThis.__PIXI_APP__ = app
   __PIXI_MEM_SLOT_ROOT_VIEW__.value.appendChild(app.view)
+  videos.init(__VIDEO_ROOT_VIEW__.value)
 }
 
 watch(imgWebm, (newVal) => {
   if (newVal) {
+    videos.play(imgWebm.value)
+
     const t = setTimeout(() => {
       imgWebm.value = ''
       duration.value = 0

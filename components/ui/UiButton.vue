@@ -37,7 +37,7 @@ const themClasses = computed(() => ({
   & .ui-button-content {
     color: black;
     height: 100%;
-    font-family: Helvetica, sans-serif;
+    font-family: 'Black Ops One', cursive;
     text-align: center;
     text-decoration: none;
     background-color: #FFA12B;

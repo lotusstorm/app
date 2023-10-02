@@ -14,8 +14,8 @@
 
 .inspect {
   position: absolute;
-  right: -50%;
-  top: -40%;
+  right: 0;
+  top: 0;
   padding: 5px;
   background-color: rgba(255, 255, 255, 0.6);
   font-size: 32px;
@@ -83,23 +83,24 @@
       &.center {
         top: -145px;
         background-color: black;
-        color: #FFA12B;
         z-index: 150;
         align-items: center;
         flex-direction: column;
+        color: #FFA12B;
 
         .lucky-spins {
           @include square(105px, 105px);
+          margin-bottom: 20px;
         }
 
         .lucky-spins-text {
-          margin-top: 20px;
+          font-size: 15px;
         }
       }
 
       &.left, &.right {
         color: #FFA12B;
-        width: 164px;
+        width: 50%;
         height: 64px;
         top: -62px;
         border-radius: 15px;
@@ -109,13 +110,13 @@
       }
 
       &.left {
-        left: 4%;
-        border-radius: 5px 0 0 0;
+        left: 0;
+        border-radius: 10px 0 0 0;
         justify-content: flex-start;
 
         .timer {
           @include square(35px, 35px, 2px, $shadow-size: 1px);
-          font-size: 25px;
+          font-size: 20px;
         }
 
         .delimeter {
@@ -124,37 +125,12 @@
       }
 
       &.right {
-        border-radius: 0 5px 0 0;
+        border-radius: 0 10px 0 0;
         font-size: 30px;
-        right: 4%;
+        right: 0;
         justify-content: flex-end;
       }
     }
-
-    // &::before {
-    //   content: "";
-    //   width: 344px;
-    //   height: 344px;
-    //   border-radius: 50% 50% 0 0;
-    //   background-color: rgba(0, 0, 0);
-    //   position: absolute;
-    //   top: -165px;
-    //   border: 5px solid rgb(237, 1, 171);
-    //   animation: pulsate-bg 1.2s linear infinite alternate;
-    //   z-index: 100;
-    // }
-
-    // &::after {
-    //   content: "";
-    //   width: 344px;
-    //   height: 344px;
-    //   position: absolute;
-    //   top: -250px;
-    //   background-image: url('/logo_pj.png');
-    //   background-position: center;
-    //   background-repeat: no-repeat;
-    //   z-index: 101;
-    // }
 
     .view {
       z-index: 250;
@@ -181,7 +157,7 @@
         color: #FFA12B;
         padding: 10px;
         border: 2px solid #FFA12B;
-        width: 100px;
+        width: 130px;
         border-radius: 5px;
 
         .bid {

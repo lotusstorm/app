@@ -24,7 +24,7 @@ export const useHelpers = (app: any) => {
 
   const reelContainer = new Container()
 
-  const balance = ref(999999)
+  const balance = ref(31415)
   const bid = ref(10)
   const multiplayer = ref(1)
 
@@ -34,10 +34,6 @@ export const useHelpers = (app: any) => {
     {
       value: 10,
       multiplayer: 1,
-    },
-    {
-      value: 20,
-      multiplayer: 1.2,
     },
     {
       value: 50,
