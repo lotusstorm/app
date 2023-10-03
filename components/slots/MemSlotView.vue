@@ -67,12 +67,13 @@
       <div v-show="!!imgWebm" class="modal-container">
         <video
           ref="__VIDEO_ROOT_VIEW__"
+          :src="imgWebm"
+          class="video"
           autoplay
           playsinline
           loop
-          class="video"
         />
-        <!-- :src="imgWebm" -->
+        <!-- <div id="root"></div> -->
         <div class="modal-description">
           <div class="description">
             <span class="text">+{{ winBid }}</span>
@@ -82,7 +83,7 @@
       </div>
     </Teleport>
 
-    <Teleport to="body">
+    <!-- <Teleport to="body">
       <span class="inspect">
         src: {{ imgWebm }}
         <br>
@@ -100,16 +101,17 @@
         <br>
         luckySpinsCooldown: {{ luckySpinsCooldown }}
       </span>
-    </Teleport>
+    </Teleport> -->
   </div>
 </template>
 
 <script lang="ts" setup>
 import { useHelpers } from '~/components/slots/composables/useHelpers'
-import { assets, video } from '~/components/slots/helpers/constants'
+import { assets } from '~/components/slots/helpers/constants'
 import UiIcon from '~/components/ui/icons/UiIcon.vue'
 import { size } from '~/components/ui/constants/size'
-import { VideoPreloader } from '~/components/slots/helpers/utils'
+// import { VideoPreloader } from '~/components/slots/helpers/utils'
+// import { load, onPlayButtonClick } from '~/components/slots/helpers/utils'
 
 const {
   Assets,
@@ -117,7 +119,7 @@ const {
 } = usePixi()
 
 const __PIXI_MEM_SLOT_ROOT_VIEW__ = ref()
-const __VIDEO_ROOT_VIEW__ = ref()
+// const __VIDEO_ROOT_VIEW__ = ref()
 
 const HEIGHT = 220
 const WIDTH = 665
@@ -128,7 +130,8 @@ const app = new Application({
   background: '#000000',
 })
 
-const videos = new VideoPreloader().load(Object.values(video).map(({ video }) => video))
+// const videos = new VideoPreloader().load(Object.values(video).map(({ video }) => video))
+// load(videoFileUlsList)
 
 const {
   balance,
@@ -141,7 +144,7 @@ const {
   running,
   imgWebm,
   duration,
-  emptyRole,
+  // emptyRole,
   isLucky,
   luckySpins,
   luckySpinsCooldown,
@@ -159,6 +162,8 @@ const handleStart = () => {
 const handleRefresh = () => {
   if (running.value) { return }
 
+  balance.value = 31415
+  bid.value = 10
   console.log('handleRefresh')
 }
 
@@ -172,18 +177,18 @@ const handleBid = (newBid: any) => {
 const test = () => {
   globalThis.__PIXI_APP__ = app
   __PIXI_MEM_SLOT_ROOT_VIEW__.value.appendChild(app.view)
-  videos.init(__VIDEO_ROOT_VIEW__.value)
+  // videos.init(__VIDEO_ROOT_VIEW__.value)
 }
 
 watch(imgWebm, (newVal) => {
   if (newVal) {
-    videos.play(imgWebm.value)
+    // onPlayButtonClick(imgWebm.value)
+    // videos.play(imgWebm.value)
 
     const t = setTimeout(() => {
       imgWebm.value = ''
       duration.value = 0
       balance.value += winBid.value
-      // animateValue(balance, balance.value, balance.value + winBid.value, 5000)
       winBid.value = 0
 
       clearTimeout(t)

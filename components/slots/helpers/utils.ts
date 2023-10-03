@@ -147,68 +147,145 @@ export class LuckySpins {
   }
 }
 
-export class VideoPreloader {
-  private videoPlayer: any = null
+// export class VideoPreloader {
 
-  load(videoFileUrls: any[]) {
-    // debugger
-    console.log(videoFileUrls, 'videoFileUrls')
+//   private videoPlayer: any = null
 
-    // Создадим предварительный кэш видео и сохраним в нем все первые сегменты видеофайлов.
-    globalThis.caches.open('video-pre-cache')
-      .then(cache => Promise.all(videoFileUrls.map((videoFileUrl: any) => this.fetchAndCache(videoFileUrl, cache))))
+//   load(videoFileUrls: any[]) {
+//     // debugger
+//     console.log(videoFileUrls, 'videoFileUrls')
 
-    return this
-  }
+//     // Создадим предварительный кэш видео и сохраним в нем все первые сегменты видеофайлов.
+//     globalThis.caches.open('video-pre-cache')
+//       .then(cache => Promise.all(videoFileUrls.map((videoFileUrl: any) => this.fetchAndCache(videoFileUrl, cache))))
 
-  private fetchAndCache(videoFileUrl: RequestInfo | URL, cache: { match: (arg0: any) => Promise<any>; put: (arg0: any, arg1: Response) => void }) {
-    // Сначала проверяем, есть ли видео в кэше.
-    return cache.match(videoFileUrl)
-      .then((cacheResponse: any) => {
-      // Вернем кэшированный ответ, если видео в кэше.
-        if (cacheResponse) {
-          return cacheResponse
-        }
-        // В противном случае получаем видео из сети.
-        return fetch(videoFileUrl)
-          .then((networkResponse) => {
-            // Добавляем ответ в кэш и параллельно возвращаем ответ сети.
-            cache.put(videoFileUrl, networkResponse.clone())
-            return networkResponse
-          })
-      })
-  }
+//     return this
+//   }
 
-  init(videoPlayer: any) {
-    this.videoPlayer = videoPlayer
+//   private async fetchAndCache(videoFileUrl: RequestInfo | URL, cache: { match: (arg0: any) => Promise<any>; put: (arg0: any, arg1: Response) => void }) {
+//     // debugger
+//     console.log(videoFileUrl, 'videoFileUrl')
 
-    return this
-  }
+//     // Сначала проверяем, есть ли видео в кэше.
+//     const cacheResponse = await cache.match(videoFileUrl)
+//     // Вернем кэшированный ответ, если видео в кэше.
+//     if (cacheResponse) {
+//       return cacheResponse
+//     }
+//     // В противном случае получаем видео из сети.
+//     const networkResponse = await fetch(videoFileUrl)
 
-  private sourceOpen(data: any, mediaSource: MediaSource) {
-    URL.revokeObjectURL(this.videoPlayer.src)
+//     cache.put(videoFileUrl, networkResponse.clone())
 
-    const sourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs="vp09.00.10.08"')
-    sourceBuffer.appendBuffer(data)
+//     return networkResponse
+//   }
 
-    this.videoPlayer.play().then(() => {
-    // Сделать: Получить остальную часть видео при начале воспроизведения.
-    })
-  }
+//   init(videoPlayer: any) {
+//     this.videoPlayer = videoPlayer
 
-  play(videoFileUrl: RequestInfo | URL) {
-    this.videoPlayer.load() // Дает возможность проиграть видео позже.
+//     return this
+//   }
 
-    globalThis.caches.open('video-pre-cache')
-      .then(cache => this.fetchAndCache(videoFileUrl, cache)) // Определено выше.
-      .then(response => response.arrayBuffer())
-      .then((data) => {
-        const mediaSource = new MediaSource()
-        this.videoPlayer.src = URL.createObjectURL(mediaSource)
-        mediaSource.addEventListener('sourceopen', this.sourceOpen.bind(this, data, mediaSource), { once: true })
-      })
-  }
-}
+//   // private sourceOpen(data: any, mediaSource: MediaSource) {
+//   //   debugger
+//   //   console.log('revokeObjectURL');
+
+//   //   URL.revokeObjectURL(this.videoPlayer.src)
+
+//   //   const sourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs="vp09.00.10.08"')
+//   //   sourceBuffer.appendBuffer(data)
+
+//   //   this.videoPlayer.play().then(() => {
+//   //   // Сделать: Получить остальную часть видео при начале воспроизведения.
+//   //   })
+//   // }
+
+//   async play(videoFileUrl: RequestInfo | URL) {
+//     debugger
+//     this.videoPlayer.load() // Дает возможность проиграть видео позже.
+
+//     const cache = await globalThis.caches.open('video-pre-cache')
+//     const response = await this.fetchAndCache(videoFileUrl, cache) // Определено выше.
+//     const data = await response.arrayBuffer()
+
+//     const mediaSource = new MediaSource()
+//     this.videoPlayer.src = URL.createObjectURL(mediaSource)
+//     this.videoPlayer.autoplay = true
+//     this.videoPlayer.playsinline = true
+//     this.videoPlayer.loop = true
+
+//     mediaSource.addEventListener('sourceopen', sourceOpen.bind(this), { once: true })
+
+//     function sourceOpen() {
+//       debugger
+//       console.log('revokeObjectURL')
+
+//       // URL.revokeObjectURL(this.videoPlayer.src)
+
+//       const sourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs="vp09.00.10.08"')
+//       sourceBuffer.appendBuffer(data)
+
+//       this.videoPlayer.play().then(() => {
+//       // Сделать: Получить остальную часть видео при начале воспроизведения.
+//       })
+//     }
+//   }
+// }
+
+// Создадим предварительный кэш видео и сохраним в нем все первые сегменты видеофайлов.
+// export function load(videoFileUrls: any[]) {
+//   window.caches.open('video-pre-cache')
+//     .then(cache => Promise.all(videoFileUrls.map((videoFileUrl: any) => fetchAndCache(videoFileUrl, cache))))
+// }
+
+// export function fetchAndCache(videoFileUrl: RequestInfo | URL, cache: Cache) {
+//   // Сначала проверяем, есть ли видео в кэше.
+//   return cache.match(videoFileUrl)
+//     .then((cacheResponse: any) => {
+//     // Вернем кэшированный ответ, если видео в кэше.
+//       if (cacheResponse) {
+//         return cacheResponse
+//       }
+//       // В противном случае получаем видео из сети.
+//       return fetch(videoFileUrl)
+//         .then((networkResponse) => {
+//           // Добавляем ответ в кэш и параллельно возвращаем ответ сети.
+//           cache.put(videoFileUrl, networkResponse.clone())
+//           return networkResponse
+//         })
+//     })
+// }
+
+// export function onPlayButtonClick(videoFileUrl: any) {
+//   // debugger
+//   console.log(videoFileUrl, 'videoFileUrl')
+
+//   const video = document.createElement('video')
+//   const root = document.querySelector('#root')
+
+//   root?.appendChild(video)
+//   video.load() // Дает возможность проиграть видео позже.
+
+//   window.caches.open('video-pre-cache')
+//     .then(cache => fetchAndCache(videoFileUrl, cache)) // Определено выше.
+//     .then(response => response.arrayBuffer())
+//     .then((data) => {
+//       const mediaSource = new MediaSource()
+//       video.src = URL.createObjectURL(mediaSource)
+//       mediaSource.addEventListener('sourceopen', sourceOpen, { once: true })
+
+//       function sourceOpen() {
+//         URL.revokeObjectURL(video.src)
+
+//         const sourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs="vp09.00.10.08"')
+//         sourceBuffer.appendBuffer(data)
+
+//         video.play().then(() => {
+//         // Сделать: Получить остальную часть видео при начале воспроизведения.
+//         })
+//       }
+//     })
+// }
 
 export const converter = (dict: any) => {
   return Object.assign(Object.entries(dict).reduce((acc, [key, val]: [string, any]) => {

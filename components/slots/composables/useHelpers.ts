@@ -1,4 +1,4 @@
-import { dict, video, assets, luckySpinVariants } from '~/components/slots/helpers/constants'
+import { dict, video, luckySpinVariants } from '~/components/slots/helpers/constants'
 import { lerp, backout, RequestAnimFrameTimer, Flag, LuckySpins, converter } from '~/components/slots/helpers/utils'
 
 export const useHelpers = (app: any) => {
@@ -72,8 +72,6 @@ export const useHelpers = (app: any) => {
 
   const ids = converter(dict)
 
-  const EXTRA = 2
-
   function startPlay() {
     if (running.value) { return }
 
@@ -88,15 +86,17 @@ export const useHelpers = (app: any) => {
       }
     }
 
+    const EXTRA = Math.floor(Math.random() * 3)
+
     for (let i = 0; i < reels.value.length; i++) {
       const r = reels.value[i]
       const target = r.position + 10 + i * 5 + EXTRA
       const time = 2500 + i * 600 + EXTRA * 600
 
-      console.log(i, 'reels.value[i]')
-      console.log(EXTRA, 'EXTRA')
-      console.log(target, 'target')
-      console.log(time, 'time')
+      // console.log(i, 'reels.value[i]')
+      // console.log(EXTRA, 'EXTRA')
+      // console.log(target, 'target')
+      // console.log(time, 'time')
 
       tweenTo(r, 'position', target, time, backout(0.5), null, i === reels.value.length - 1 ? reelsComplete : null)
     }
@@ -113,7 +113,7 @@ export const useHelpers = (app: any) => {
         const symbol = r.symbols[j]
 
         if (Math.floor(symbol.y) === 0) {
-          console.log('reelsComplete', symbol)
+          // console.log('reelsComplete', symbol)
           res += ids[symbol.uuid]
         }
       }
@@ -154,8 +154,8 @@ export const useHelpers = (app: any) => {
   }
   // onAssetsLoaded handler builds the example.
   function onAssetsLoaded(data: { [s: string]: unknown } | ArrayLike<unknown>) {
-    console.log(data, 'data')
-    console.log(assets, 'assets')
+    // console.log(data, 'data')
+    // console.log(assets, 'assets')
 
     // Create different slot symbols.
     const slotTextures = Object.entries(data)

@@ -128,6 +128,8 @@ useNuxtApp().hook('page:finish', () => {
       top: -165px;
       border: 5px solid rgb(237, 1, 171);
       // animation: pulsate-bg 1.2s linear infinite alternate;
+      box-shadow: 0px 0px 15px 5px rgba(237, 1, 171, 0.7);
+
       z-index: 10;
     }
 
@@ -140,20 +142,10 @@ useNuxtApp().hook('page:finish', () => {
         top: 10px;
         z-index: 250;
         border-radius: 5px;
+        box-shadow: 0px 0px 15px 5px rgba(237, 1, 171, 0.7);
+
         // animation: pulsate-bg 1.2s linear infinite alternate;
       }
-
-    // &::after {
-    //   content: "";
-    //   width: 344px;
-    //   height: 344px;
-    //   position: absolute;
-    //   top: -250px;
-    //   background-image: url('/logo_pj.png');
-    //   background-position: center;
-    //   background-repeat: no-repeat;
-    //   z-index: 101;
-    // }
   }
 
   .img {
