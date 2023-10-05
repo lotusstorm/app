@@ -2,16 +2,18 @@
   <div class="slots-root-container">
     <img class="img img-left" src="/julia_bg.webp" loading="lazy">
     <div class="content-container">
-      <div class="content-container-bg" />
-      <div class="author">
-        <img src="/avatar.webp" alt="avatar" class="avatar">
-        <a href="https://www.twitch.tv/pinkjuli" class="text" target="_blank">
-          pinkjuli
-        </a>
+      <div class="wrapper">
+        <div class="content-container-bg" />
+        <div class="author">
+          <img src="/avatar.webp" alt="avatar" class="avatar">
+          <a href="https://www.twitch.tv/pinkjuli" class="text" target="_blank">
+            pinkjuli
+          </a>
+        </div>
+        <ClientOnly>
+          <MemSlotView />
+        </ClientOnly>
       </div>
-      <ClientOnly>
-        <MemSlotView />
-      </ClientOnly>
     </div>
     <img class="img img-right" src="/leon_bg.webp" loading="lazy">
 
@@ -71,69 +73,71 @@ useNuxtApp().hook('page:finish', () => {
   overflow: hidden;
 
   .content-container {
-    position: relative;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    background-color: rgba(0, 0, 0);
-    width: 695px;
-    height: 360px;
-    margin-top: 180px;
-    margin-bottom: auto;
-    z-index: 99;
-    border-radius: 0 0 10px 10px;
 
-    .author {
-      position: absolute;
-      content: "";
-      top: -130px;
-      z-index: 100;
+    .wrapper {
+      position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
+      background-color: rgba(0, 0, 0);
+      width: 695px;
+      height: 360px;
+      margin-top: 160px;
+      z-index: 99;
+      border-radius: 0 0 10px 10px;
 
-      .avatar {
-        border-radius: 50%;
-        overflow: hidden;
-        animation: pulsate-bg 1.2s linear infinite alternate;
-        border: 3px solid rgb(237, 1, 171);
-        width: 80px;
-        height: 80px;
-        margin-bottom: 10px;
+      .author {
+        position: absolute;
+        content: "";
+        top: -130px;
+        z-index: 100;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .avatar {
+          border-radius: 50%;
+          overflow: hidden;
+          animation: pulsate-bg 1.2s linear infinite alternate;
+          border: 3px solid rgb(237, 1, 171);
+          width: 80px;
+          height: 80px;
+          margin-bottom: 10px;
+        }
+
+        .text {
+          color: #FFA12B;
+          font-size: 30px;
+          font-family: 'Black Ops One', cursive;
+        }
       }
 
-      .text {
-        color: #FFA12B;
-        font-size: 30px;
-        font-family: 'Black Ops One', cursive;
+      &-bg {
+        width: 100%;
+        height: 220px;
+        background-color: rgba(0, 0, 0);
+        z-index: 11;
+        margin: 15px;
+        position: absolute;
       }
-    }
 
-    &-bg {
-      width: 100%;
-      height: 220px;
-      background-color: rgba(0, 0, 0);
-      z-index: 11;
-      margin: 15px;
-      position: absolute;
-    }
+      &::before {
+        content: "";
+        width: 344px;
+        height: 344px;
+        border-radius: 50% 50% 0 0;
+        background-color: rgba(0, 0, 0);
+        position: absolute;
+        top: -165px;
+        border: 5px solid rgb(237, 1, 171);
+        // animation: pulsate-bg 1.2s linear infinite alternate;
+        box-shadow: 0px 0px 15px 5px rgba(237, 1, 171, 0.7);
+        z-index: 10;
+      }
 
-    &::before {
-      content: "";
-      width: 344px;
-      height: 344px;
-      border-radius: 50% 50% 0 0;
-      background-color: rgba(0, 0, 0);
-      position: absolute;
-      top: -165px;
-      border: 5px solid rgb(237, 1, 171);
-      // animation: pulsate-bg 1.2s linear infinite alternate;
-      box-shadow: 0px 0px 15px 5px rgba(237, 1, 171, 0.7);
-
-      z-index: 10;
-    }
-
-    &::after {
+      &::after {
         content: "";
         position: absolute;
         border: 5px solid rgb(237, 1, 171);
@@ -146,6 +150,7 @@ useNuxtApp().hook('page:finish', () => {
 
         // animation: pulsate-bg 1.2s linear infinite alternate;
       }
+    }
   }
 
   .img {

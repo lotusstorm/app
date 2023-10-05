@@ -62,7 +62,7 @@ export const useHelpers = (app: any) => {
   const emptyRole = ref(0)
 
   const isLucky = ref(false)
-  const luckySpins = ref(6)
+  const luckySpins = ref(66)
   const luckySpinsCooldown = ref(0)
 
   const tweening = ref([])
@@ -125,14 +125,21 @@ export const useHelpers = (app: any) => {
 
     if (res in video) {
       webm = video[res].video
+
+      if (Array.isArray(webm)) {
+        const ind = Math.floor(Math.random() * webm.length)
+
+        webm = webm[ind]
+      }
+
       dur = video[res].duration
       winBid.value = video[res].winBid + bid.value * multiplayer.value
       emptyRole.value = 0
-    } else if (emptyRole.value === MAX_EMPTY_ROLE) {
+    } else if (emptyRole.value > 0 && emptyRole.value % MAX_EMPTY_ROLE === 0) {
       webm = video['000'].video
       dur = video['000'].duration
       winBid.value = 0
-      emptyRole.value = 0
+      // emptyRole.value = 0
     }
 
     if (isLucky.value) {
@@ -222,8 +229,8 @@ export const useHelpers = (app: any) => {
 
             let uuid, texture
 
-            if (isLucky.value) {
-              const ind = spin.next()
+            if (isLucky.value || emptyRole.value === MAX_EMPTY_ROLE + 3) {
+              const ind = spin.getWinCombina(i)
               uuid = ids[ind]
               texture = data[uuid]
             } else {

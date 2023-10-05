@@ -122,6 +122,10 @@ export class LuckySpins {
     }
   }
 
+  getWinCombina(index: any) {
+    return this.variants?.[this.target][index] ?? 0
+  }
+
   next(): any {
     const item = this.variant?.next()
 
@@ -135,8 +139,8 @@ export class LuckySpins {
   }
 
   step() {
-    this.target = Math.floor(Math.random() * this.variants.length)
-    // this.target += 1
+    // this.target = Math.floor(Math.random() * this.variants.length)
+    this.target += 1
 
     if (this.target > this.variants.length - 1) {
       this.target = 0

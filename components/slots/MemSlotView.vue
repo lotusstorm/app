@@ -83,7 +83,7 @@
       </div>
     </Teleport>
 
-    <!-- <Teleport to="body">
+    <Teleport to="body">
       <span class="inspect">
         src: {{ imgWebm }}
         <br>
@@ -101,7 +101,7 @@
         <br>
         luckySpinsCooldown: {{ luckySpinsCooldown }}
       </span>
-    </Teleport> -->
+    </Teleport>
   </div>
 </template>
 
@@ -144,7 +144,7 @@ const {
   running,
   imgWebm,
   duration,
-  // emptyRole,
+  emptyRole,
   isLucky,
   luckySpins,
   luckySpinsCooldown,

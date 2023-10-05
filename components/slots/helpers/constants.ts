@@ -1,16 +1,24 @@
 export const video = {
   111: {
-    video: '/app/video/papich_ninada_diadia.webm',
+    video: [
+      '/app/video/papich_ninada_diadia.webm',
+      '/app/video/tyrant_2.webm',
+      '/app/video/tyrant.webm',
+    ],
     duration: 8000,
     winBid: 1111,
-  }, // papich
+  }, // tyrant
   222: {
     video: '/app/video/chonguk_press_2.webm',
     duration: 5000,
     winBid: 1121,
   }, // chonguk
   333: {
-    video: '/app/video/juli.webm',
+    video: [
+      '/app/video/juli.webm',
+      '/app/video/juli_shutani.webm',
+      '/app/video/juli_nervi.webm',
+    ],
     duration: 8000,
     winBid: 1123,
   }, // juli
@@ -30,10 +38,14 @@ export const video = {
     winBid: 1222,
   }, // pain
   777: {
-    video: '/app/video/papich_eto_mne.webm',
+    video: [
+      '/app/video/papich_eto_mne.webm',
+      '/app/video/esche.webm',
+      '/app/video/777.webm',
+    ],
     duration: 8000,
     winBid: 777,
-  }, // papich
+  }, // 777
   888: {
     video: '/app/video/one_pice.webm',
     duration: 8000,
@@ -76,12 +88,12 @@ export const video = {
     winBid: 555,
   }, // genshin + juli
   gg3: {
-    video: '/app/video/genshin_second.webm',
+    video: '/app/video/genshin_chicha.webm',
     duration: 5000,
     winBid: 555,
   }, // genshin + juli
   g3g: {
-    video: '/app/video/genshin_second.webm',
+    video: '/app/video/genshin_chicha_2.webm',
     duration: 5000,
     winBid: 555,
   }, // genshin + juli
@@ -96,7 +108,7 @@ export const video = {
     winBid: 324,
   }, // juli + leon
   443: {
-    video: '/app/video/julia_leon_reaction.webm',
+    video: '/app/video/leon_kringe_1.webm',
     duration: 8000,
     winBid: 324,
   }, // juli + leon
@@ -106,22 +118,22 @@ export const video = {
     winBid: 324,
   }, // juli + leon
   334: {
-    video: '/app/video/julia_leon_reaction.webm',
+    video: '/app/video/leon_cool.webm',
     duration: 8000,
     winBid: 324,
   }, // juli + leon
   343: {
-    video: '/app/video/julia_leon_reaction.webm',
+    video: '/app/video/leon_kringe_1.webm',
     duration: 8000,
     winBid: 324,
   }, // juli + leon
   434: {
-    video: '/app/video/julia_leon_reaction.webm',
+    video: '/app/video/leon_smile.webm',
     duration: 8000,
     winBid: 324,
   }, // juli + leon
   311: {
-    video: '/app/video/julia_tyrant_reaction.webm',
+    video: '/app/video/tyrant_3.webm',
     duration: 10000,
     winBid: 445,
   }, // juli + tyrant
@@ -131,17 +143,17 @@ export const video = {
     winBid: 445,
   }, // juli + tyrant
   133: {
-    video: '/app/video/julia_tyrant_reaction.webm',
+    video: '/app/video/juli_raige.webm',
     duration: 10000,
     winBid: 445,
   }, // juli + tyrant
   331: {
-    video: '/app/video/julia_tyrant_reaction.webm',
+    video: '/app/video/tyrant_3.webm',
     duration: 10000,
     winBid: 445,
   }, // juli + tyrant
   313: {
-    video: '/app/video/julia_tyrant_reaction.webm',
+    video: '/app/video/juli_raige.webm',
     duration: 10000,
     winBid: 445,
   }, // juli + tyrant
@@ -151,7 +163,7 @@ export const video = {
     winBid: 445,
   }, // juli + tyrant
   233: {
-    video: '/app/video/chonguk_press_1.webm',
+    video: '/app/video/juli_chonguk.webm',
     duration: 4000,
     winBid: 389,
   }, // chonguk + juli ??
@@ -161,42 +173,42 @@ export const video = {
     winBid: 389,
   }, // chonguk + juli ??
   223: {
-    video: '/app/video/chonguk_press_1.webm',
+    video: '/app/video/chonguk_3.webm',
     duration: 4000,
     winBid: 389,
   }, // chonguk + juli ??
   322: {
-    video: '/app/video/chonguk_press_1.webm',
+    video: '/app/video/chonguk_2.webm',
     duration: 4000,
     winBid: 389,
   }, // chonguk + juli ??
   323: {
-    video: '/app/video/chonguk_press_1.webm',
+    video: '/app/video/chonguk.webm',
     duration: 4000,
     winBid: 389,
   }, // chonguk + juli ??
   232: {
-    video: '/app/video/chonguk_press_1.webm',
+    video: '/app/video/juli_chonguk.webm',
     duration: 8000,
     winBid: 389,
   }, // chonguk + juli ??
   339: {
-    video: '/app/video/one_piece_zoro_netflix_2.webm',
+    video: '/app/video/juli_zoro_delishes_low.webm',
     duration: 8000,
     winBid: 155,
   }, // zoro + juli
   993: {
-    video: '/app/video/one_piece_zoro_netflix_2.webm',
+    video: '/app/video/zoro_netflix_love.webm',
     duration: 8000,
     winBid: 155,
   }, // zoro + juli
   399: {
-    video: '/app/video/one_piece_zoro_netflix_2.webm',
+    video: '/app/video/zoro_netflix_4.webm',
     duration: 8000,
     winBid: 155,
   }, // zoro + juli
   933: {
-    video: '/app/video/one_piece_zoro_netflix_2.webm',
+    video: '/app/video/zoro_netflix_3.webm',
     duration: 8000,
     winBid: 155,
   }, // zoro + juli
@@ -206,7 +218,7 @@ export const video = {
     winBid: 155,
   }, // zoro + juli
   939: {
-    video: '/app/video/one_piece_zoro_netflix_2.webm',
+    video: '/app/video/juli_zoro_delishes_low.webm',
     duration: 8000,
     winBid: 155,
   }, // zoro + juli
@@ -231,7 +243,7 @@ export const video = {
     winBid: 394,
   }, // naruto + pain
   565: {
-    video: '/app/video/pain_naruto_1.webm',
+    video: '/app/video/pain_naruto_2.webm',
     duration: 8000,
     winBid: 394,
   }, // naruto + pain
@@ -266,12 +278,12 @@ export const video = {
     winBid: 220,
   }, // leon + tyrant
   414: {
-    video: '/app/video/leon_vs_tyrant_3.webm',
+    video: '/app/video/leon_vs_tyrant.webm',
     duration: 8000,
     winBid: 220,
   }, // leon + tyrant
   998: {
-    video: '/app/video/one_pice_zoro.webm',
+    video: '/app/video/one_piece_netflix_1.webm',
     duration: 8000,
     winBid: 532,
   }, // zoro + one_pice
@@ -281,7 +293,7 @@ export const video = {
     winBid: 532,
   }, // zoro + one_pice
   988: {
-    video: '/app/video/one_pice_zoro.webm',
+    video: '/app/video/one_piece_netflix_1.webm',
     duration: 8000,
     winBid: 532,
   }, // zoro + one_pice
@@ -291,7 +303,7 @@ export const video = {
     winBid: 532,
   }, // zoro + one_pice
   898: {
-    video: '/app/video/one_pice_zoro.webm',
+    video: '/app/video/one_piece_netflix_1.webm',
     duration: 8000,
     winBid: 532,
   }, // zoro + one_pice
@@ -301,7 +313,7 @@ export const video = {
     winBid: 532,
   }, // zoro + one_pice
   229: {
-    video: '/app/video/gachi_gym_boss.webm',
+    video: '/app/video/gachi_2.webm',
     duration: 5000,
     winBid: 300,
   }, // zoro + chonguk
@@ -311,7 +323,7 @@ export const video = {
     winBid: 300,
   }, // zoro + chonguk
   299: {
-    video: '/app/video/gachi_gym_boss.webm',
+    video: '/app/video/gachi_2.webm',
     duration: 5000,
     winBid: 300,
   }, // zoro + chonguk
@@ -321,7 +333,7 @@ export const video = {
     winBid: 300,
   }, // zoro + chonguk
   292: {
-    video: '/app/video/gachi_gym_boss.webm',
+    video: '/app/video/gachi_2.webm',
     duration: 5000,
     winBid: 300,
   }, // zoro + chonguk
@@ -336,7 +348,7 @@ export const video = {
     winBid: 221,
   }, // juli + one_pice => ban
   338: {
-    video: '/app/video/twitch_ban.webm',
+    video: '/app/video/juli_durachok.webm',
     duration: 8000,
     winBid: 221,
   }, // juli + one_pice => ban
@@ -346,7 +358,7 @@ export const video = {
     winBid: 221,
   }, // juli + one_pice => ban
   388: {
-    video: '/app/video/twitch_ban.webm',
+    video: '/app/video/juli_durachok.webm',
     duration: 8000,
     winBid: 221,
   }, // juli + one_pice => ban
@@ -356,36 +368,55 @@ export const video = {
     winBid: 221,
   }, // juli + one_pice => ban
   838: {
-    video: '/app/video/twitch_ban.webm',
+    video: '/app/video/juli_durachok.webm',
     duration: 8000,
     winBid: 221,
   }, // juli + one_pice => ban
 }
 
 export const luckySpinVariants = [
-  '411',
-  '566',
-  '992',
-  '665',
-  '883',
-  '998',
-  '223',
-  '444',
-  '993',
-  '113',
-  '3gg',
-  '222',
-  '111',
-  '443',
-  '555',
-  '333',
-  '777',
-  '999',
+  '383',
   '666',
-  // 'bts',
-  'ggg',
-  '3g3',
+  'gg3',
+  '339',
+  '223',
+  '344',
+  '111',
+  '299',
+  '993',
+  '331',
+  '898',
+  '333',
+  '399',
+  '114',
+  '444',
+  '232',
+  '232',
+  'g33',
   '888',
+  '334',
+  '933',
+  '131',
+  '565',
+  '434',
+  'ggg',
+  '322',
+  '393',
+  '656',
+  '777',
+  '414',
+  '222',
+  '555',
+  '989',
+  'g3g',
+  '343',
+  '929',
+  '313',
+  '332',
+  '939',
+  '999',
+  '838',
+  '323',
 ]
 
 export const dict = {
