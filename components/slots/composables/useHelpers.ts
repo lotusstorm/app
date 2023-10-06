@@ -57,17 +57,16 @@ export const useHelpers = (app: any) => {
 
   const running = ref(false)
   const imgWebm = ref('')
-  const duration = ref(0)
 
   const emptyRole = ref(0)
 
   const isLucky = ref(false)
-  const luckySpins = ref(66)
+  const luckySpins = ref(6)
   const luckySpinsCooldown = ref(0)
 
   const tweening = ref([])
 
-  const timer = new RequestAnimFrameTimer(luckySpinsCooldown)
+  const timer = new RequestAnimFrameTimer()
   const spin = new LuckySpins(luckySpinVariants)
 
   const ids = converter(dict)
@@ -120,8 +119,6 @@ export const useHelpers = (app: any) => {
     }
 
     let webm = ''
-    let dur = 0
-    // let curBid = 0
 
     if (res in video) {
       webm = video[res].video
@@ -132,12 +129,11 @@ export const useHelpers = (app: any) => {
         webm = webm[ind]
       }
 
-      dur = video[res].duration
+      // dur = video[res].duration
       winBid.value = video[res].winBid + bid.value * multiplayer.value
       emptyRole.value = 0
     } else if (emptyRole.value > 0 && emptyRole.value % MAX_EMPTY_ROLE === 0) {
       webm = video['000'].video
-      dur = video['000'].duration
       winBid.value = 0
       // emptyRole.value = 0
     }
@@ -148,22 +144,23 @@ export const useHelpers = (app: any) => {
           isLucky.value = false
           luckySpins.value = 6
 
-          timer.start(60, Flag.dec).stop(0)
+          timer.start(60, Flag.dec)
+            .tick((count) => {
+              luckySpinsCooldown.value = count
+            })
+            .stop(0)
         }
       })
     }
 
     imgWebm.value = webm
-    duration.value = dur
+    // duration.value = dur
     emptyRole.value += 1
 
     running.value = false
   }
   // onAssetsLoaded handler builds the example.
   function onAssetsLoaded(data: { [s: string]: unknown } | ArrayLike<unknown>) {
-    // console.log(data, 'data')
-    // console.log(assets, 'assets')
-
     // Create different slot symbols.
     const slotTextures = Object.entries(data)
 
@@ -302,7 +299,6 @@ export const useHelpers = (app: any) => {
     onAssetsLoaded,
     running,
     imgWebm,
-    duration,
     emptyRole,
     isLucky,
     luckySpins,

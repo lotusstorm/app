@@ -9,7 +9,7 @@ export const animateValue = (obj: any, start: any, end: any, duration: any) => {
     const progress = Math.min((timestamp - startTimestamp) / duration, 1)
     obj.value = Math.floor(progress * (end - start) + start)
 
-    console.log(Math.floor(progress * (end - start) + start), 'sxsx')
+    // console.log(Math.floor(progress * (end - start) + start), 'sxsx')
 
     if (progress < 1) {
       requestAnimationFrame(step)
@@ -28,18 +28,20 @@ export class RequestAnimFrameTimer {
   private isStarted = false
   private lastTime = 0
   private numSeconds = 0
-  private currentTarget = null
+  // private currentTarget = null
+  private events: any[] = []
   private _ID: null | number = null
   private max: null | number = null
+  private _cb: null | (() => void) = null
 
-  constructor(target: any) {
-    this.currentTarget = target
-  }
+  // constructor(target: any) {
+  //   this.currentTarget = target
+  // }
 
   private timer(step: number) {
-    if (!this.currentTarget) {
-      return
-    }
+    // if (!this.currentTarget) {
+    //   return
+    // }
 
     if (
       this.max !== null &&
@@ -59,7 +61,8 @@ export class RequestAnimFrameTimer {
     if (currentTime - this.lastTime >= 1000) {
       this.lastTime = currentTime
       this.numSeconds += step
-      this.currentTarget.value = this.numSeconds
+      this.events.forEach(cb => cb(this.numSeconds))
+      // this.currentTarget.value = this.numSeconds
     }
   }
 
@@ -79,6 +82,7 @@ export class RequestAnimFrameTimer {
     if (this._ID !== null) {
       globalThis.cancelAnimationFrame(this._ID)
 
+      this._cb?.()
       this.numSeconds = 0
       this.max = null
       this._ID = null
@@ -86,14 +90,21 @@ export class RequestAnimFrameTimer {
     }
   }
 
-  stop(value: number) {
+  stop(value: number, cb?: any) {
     this.max = value
+    this._cb = cb
 
     return this
   }
 
   reset(value: number) {
     this.numSeconds = value
+  }
+
+  tick(cb: (count: number) => any) {
+    this.events.push(cb)
+
+    return this
   }
 }
 
@@ -147,7 +158,7 @@ export class LuckySpins {
     }
 
     this.variant = this.gen(this.target)
-    console.log(this.target, 'step -> this.target')
+    // console.log(this.target, 'step -> this.target')
   }
 }
 

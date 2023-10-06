@@ -40,12 +40,12 @@ const isShow = ref(true)
 
 const handleStart = () => {
   isShow.value = false
-  console.log('click')
+  // console.log('click')
 }
 
 useNuxtApp().hook('page:finish', () => {
   isDataReady.value = true
-  console.log('99999999999999')
+  // console.log('99999999999999')
 })
 </script>
 
