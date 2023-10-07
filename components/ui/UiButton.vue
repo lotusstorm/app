@@ -20,8 +20,6 @@ const props = defineProps({
   }
 })
 
-console.log(props.size, 'props.size')
-
 const themClasses = computed(() => ({
   'them-rounded': props.isRound,
   [`them-size-${props.size}`]: true,

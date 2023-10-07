@@ -61,7 +61,7 @@ export const useHelpers = (app: any) => {
   const emptyRole = ref(0)
 
   const isLucky = ref(false)
-  const luckySpins = ref(6)
+  const luckySpins = ref(9)
   const luckySpinsCooldown = ref(0)
 
   const tweening = ref([])
@@ -72,7 +72,7 @@ export const useHelpers = (app: any) => {
   const ids = converter(dict)
 
   function startPlay() {
-    if (running.value) { return }
+    if (running.value || balance.value - bid.value < 0) { return }
 
     running.value = true
     balance.value -= bid.value
@@ -99,6 +99,10 @@ export const useHelpers = (app: any) => {
 
       tweenTo(r, 'position', target, time, backout(0.5), null, i === reels.value.length - 1 ? reelsComplete : null)
     }
+  }
+
+  const onEnd = () => {
+
   }
 
   // Reels done handler.
@@ -129,13 +133,13 @@ export const useHelpers = (app: any) => {
         webm = webm[ind]
       }
 
-      // dur = video[res].duration
       winBid.value = video[res].winBid + bid.value * multiplayer.value
       emptyRole.value = 0
     } else if (emptyRole.value > 0 && emptyRole.value % MAX_EMPTY_ROLE === 0) {
       webm = video['000'].video
       winBid.value = 0
-      // emptyRole.value = 0
+    } else {
+      running.value = false
     }
 
     if (isLucky.value) {
@@ -154,10 +158,7 @@ export const useHelpers = (app: any) => {
     }
 
     imgWebm.value = webm
-    // duration.value = dur
     emptyRole.value += 1
-
-    running.value = false
   }
   // onAssetsLoaded handler builds the example.
   function onAssetsLoaded(data: { [s: string]: unknown } | ArrayLike<unknown>) {

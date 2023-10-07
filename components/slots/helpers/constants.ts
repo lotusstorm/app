@@ -391,7 +391,6 @@ export const luckySpinVariants = [
   '114',
   '444',
   '232',
-  '232',
   'g33',
   '888',
   '334',

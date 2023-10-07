@@ -1,6 +1,6 @@
 <template>
   <label class="switch">
-    <input v-model="value" type="checkbox" class="self">
+    <input v-model="value" :disabled="disabled" type="checkbox" class="self">
     <span class="slider round" />
   </label>
 </template>
@@ -10,7 +10,11 @@ const props = defineProps({
   modelValue: {
     type: Boolean,
     default: false,
-  }
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits(['update:modelValue'])

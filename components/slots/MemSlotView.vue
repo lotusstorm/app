@@ -2,9 +2,18 @@
   <div class="root-container">
     <div class="view-container">
       <div class="indicator left">
-        <UiIcon icon="dice" fill="#FFA12B" height="22px" width="22px" />
+        <UiIcon
+          icon="dice"
+          fill="#FFA12B"
+          height="22px"
+          width="22px"
+        />
         <span class="delimeter">x</span>
-        <UiSwitch v-if="!isLuckyCooldown" v-model="isLucky" />
+        <UiSwitch
+          v-if="!isLuckyCooldown"
+          v-model="isLucky"
+          :disabled="running"
+        />
         <span v-else class="timer">
           {{ luckySpinsCooldown }}
         </span>
@@ -72,11 +81,14 @@
           playsinline
           loop
         />
-        <!-- <div id="root"></div> -->
         <div class="modal-description">
           <div class="description">
             <span class="text">+{{ winBid }}</span>
-            <UiIcon icon="pj-icon" height="32px" width="32px" />
+            <UiIcon
+              icon="pj-icon"
+              height="32px"
+              width="32px"
+            />
           </div>
         </div>
       </div>
@@ -119,6 +131,7 @@ const {
 
 const __PIXI_MEM_SLOT_ROOT_VIEW__ = ref()
 const __VIDEO_ROOT_VIEW__ = ref()
+
 const showVideo = ref(false)
 
 const HEIGHT = 220
@@ -174,28 +187,44 @@ const handleBid = (newBid: any) => {
   multiplayer.value = newBid.multiplayer
 }
 
-const test = () => {
+const handleBackspace = (event: any) => {
+  if (event.code === 'Space') {
+    startPlay()
+  }
+}
+
+const handleDataLoad = (event: any) => {
+  const { target } = event
+
+  if (target) {
+    showVideo.value = true
+    target.play()
+
+    counter.start(0).stop(event.target?.duration, () => {
+      showVideo.value = false
+      balance.value += winBid.value
+      imgWebm.value = ''
+      running.value = false
+
+      target.pause()
+      target.currentTime = 0
+    })
+  }
+}
+
+onMounted(() => {
   globalThis.__PIXI_APP__ = app
 
   __PIXI_MEM_SLOT_ROOT_VIEW__.value.appendChild(app.view)
-  __VIDEO_ROOT_VIEW__.value.addEventListener('loadeddata', (event: any) => {
-    const { target } = event
+  document.addEventListener('keydown', handleBackspace)
 
-    if (target) {
-      showVideo.value = true
-      target.play()
+  __VIDEO_ROOT_VIEW__.value.addEventListener('loadeddata', handleDataLoad)
+})
 
-      counter.start(0).stop(event.target?.duration, () => {
-        showVideo.value = false
-
-        target.pause()
-        target.currentTime = 0
-      })
-    }
-  })
-}
-
-onMounted(test)
+onBeforeUnmount(() => {
+  document.removeEventListener('keydown', handleBackspace)
+  __VIDEO_ROOT_VIEW__.value.removeEventListener('loadeddata', handleDataLoad)
+})
 </script>
 
 <style scoped lang="scss">
